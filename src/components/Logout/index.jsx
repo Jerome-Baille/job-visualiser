@@ -4,8 +4,10 @@ import Toast from "react-bootstrap/Toast";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
+    const navigate = useNavigate();
     const [showSuccess, setShowSuccess] = useState(false);
 
     const handleLogout = (event) => {
@@ -15,7 +17,7 @@ const Logout = () => {
             setShowSuccess(true)
 
             setTimeout(() => {
-                window.location.href = "job-visualiser/login"
+                navigate('/login');
             }, 2500)
         })
     }

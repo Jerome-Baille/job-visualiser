@@ -5,9 +5,10 @@ import Toast from "react-bootstrap/Toast";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { login } from '../../services/auth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({})
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -31,7 +32,7 @@ const handleSubmit = (event) => {
         setShowSuccess(true)
 
         setTimeout(() => {
-            window.location.href = "/job-visualiser/"
+            navigate('/');
         }, 2500)
       } else {
         setShowError(true)

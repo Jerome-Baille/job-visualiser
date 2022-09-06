@@ -17,8 +17,6 @@ export async function register(newUser) {
 export async function login(user) {
     const response = await fetch(`${baseURL}/login`, {
         method: 'POST',
-        withCredentials: true,
-        credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

@@ -5,7 +5,6 @@ export async function getAllOpportunities(token) {
     const response = await fetch(baseURL,{
         method: 'GET',
         withCredentials: true,
-        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
@@ -20,7 +19,6 @@ export async function getOneOpportunity(token, id) {
     const response = await fetch(`${baseURL}/job/${id}`,{
         method: 'GET',
         withCredentials: true,
-        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
@@ -35,7 +33,6 @@ export async function postOpportunity(token, opportunity) {
     const response = await fetch(`${baseURL}/new`, {
         method: 'POST',
         withCredentials: true,
-        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
@@ -51,7 +48,6 @@ export async function putOpportunity(token, opportunity) {
     const response = await fetch(`${baseURL}/job/${opportunity._id}`, {
         method: 'PUT',
         withCredentials: true,
-        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
@@ -69,7 +65,6 @@ export async function deleteOpportunity(token, id) {
     const response = await fetch(`${baseURL}/job/${id}`, {
         method: 'DELETE',
         withCredentials: true,
-        credentials: 'include',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',

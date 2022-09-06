@@ -2,10 +2,12 @@ import { Button } from "react-bootstrap";
 import { logout } from "../../services/auth";
 import Toast from "react-bootstrap/Toast";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Logout = () => {
+    const history = useHistory();
     const [showSuccess, setShowSuccess] = useState(false);
 
     const handleLogout = (event) => {
@@ -15,7 +17,7 @@ const Logout = () => {
             setShowSuccess(true)
 
             setTimeout(() => {
-                window.location.href = "/login"
+                history.push("/login") 
             }, 2500)
         })
     }

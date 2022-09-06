@@ -1,4 +1,4 @@
-const baseURL = '/api';
+const baseURL = 'https://job-application-tracker.azurewebsites.net/api';
 // const baseURL = 'http://localhost:3000/api';
 
 export async function getAllOpportunities(token) {

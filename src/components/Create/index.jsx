@@ -1,0 +1,227 @@
+import React from "react";
+import { useState, useEffect } from "react";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import { postOpportunity } from "../../services/service";
+import Toast from "react-bootstrap/Toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { getTokenAndUserId } from "../../services/auth";
+
+export default function Create() {
+    const [userAuth, setUserAuth] = useState({});
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [contactInfo, setContactInfo] = useState({
+        type: "Remote",
+        applicationDate: new Date().toISOString().substring(0, 10),
+        decision: "unknown",
+    });
+
+    const type = ["Remote", "Hybrid", "On site"];
+    const decision = ["positive", "negative", "in progress", "expired", "unknown"];
+
+    useEffect(() => {
+        getTokenAndUserId().then((res) => {
+            setUserAuth(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    } ,[]);
+
+  const handleChange = (event) => {
+    setContactInfo({ ...contactInfo, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    var date = new Date(contactInfo.applicationDate);
+    var isoDate = date.toISOString();
+
+    var opportunity = {...contactInfo, applicationDate: isoDate}
+
+    getTokenAndUserId().then((res) => {
+        setContactInfo({ ...contactInfo, userId: res.userId });
+
+        opportunity = {...opportunity, userId: res.userId}
+
+        var token = res.token;
+
+        postOpportunity(token, opportunity)
+        .then(res => {
+            console.log(res)
+            opportunity = {...opportunity, _id : res.body.id}
+
+            if(res.status === 201) {
+                var infoInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
+                if (infoInLocalStorage) {
+                    infoInLocalStorage.unshift(opportunity);
+                    localStorage.setItem("jobs", JSON.stringify(infoInLocalStorage));
+                }
+
+                setShowSuccess(true)
+
+                setTimeout(() => {
+                    window.location.href = "/"
+                }, 2500)
+            } else {
+                setShowError(true)
+                console.log(res.body.error)
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
+
+
+  };
+
+
+  return (
+    <>
+    {userAuth.userId !== '' ?
+        <div className="main-container">
+                <Toast 
+                    onClose={() => setShowSuccess(false)} 
+                    show={showSuccess} 
+                    delay={2500} 
+                    autohide
+                >
+                    <Toast.Header className="toast-header--success">
+                        <strong className="me-auto">
+                            <FontAwesomeIcon icon={faCircleCheck} />
+                            <span>  Success !</span>
+                        </strong>
+                        
+                    </Toast.Header>
+                    <Toast.Body>The job application has been added to the database !</Toast.Body>
+                </Toast>
+
+                <Toast 
+                    onClose={() => setShowError(false)} 
+                    show={showError} 
+                    delay={2500} 
+                    autohide
+                >
+                    <Toast.Header className="toast-header--delete">
+                        <strong className="me-auto">
+                            <FontAwesomeIcon icon={faCircleExclamation} />
+                            <span>  Error !</span>
+                        </strong>
+                        
+                    </Toast.Header>
+                    <Toast.Body>Oh no, something went wrong ! <br/> Try again</Toast.Body>
+                </Toast>
+            <div className="form-container">
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formName">
+                    <Form.Label>Title : (required)</Form.Label>
+                    <Form.Control 
+                            required
+                            type="text" 
+                            name="name"
+                            placeholder="Title"
+                            onChange={handleChange} 
+                    />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formCompany">
+                    <Form.Label>Company : (required)</Form.Label>
+                    <Form.Control 
+                            required
+                            type="text"
+                            name="company"
+                            placeholder="Company"
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formLocation">
+                    <Form.Label>Location : (required)</Form.Label>
+                    <Form.Control 
+                            required
+                            type="text"
+                            name="location"
+                            placeholder="Location"
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formType">
+                    <Form.Label>Type of job : (required)</Form.Label>
+                    <Form.Select
+                        required
+                        name="type"
+                        placeholder="Type of job"
+                        value={contactInfo.type}
+                        onChange={handleChange}
+                    >
+                        {type.map((type, index) => {
+                            return (<option key={index} value={type}>{type}</option>)
+                        })}
+                    </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formLink">
+                    <Form.Label>Job offer link or company website : (required)</Form.Label>
+                    <Form.Control 
+                            required
+                            type="text"
+                            name="link"
+                            placeholder="Job offer link or company website"
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formDate">
+                    <Form.Label>Date of application : (required)</Form.Label>
+                    <Form.Control 
+                            required
+                            type="date"
+                            name="applicationDate"
+                            placeholder="Date of application"
+                            value={contactInfo.applicationDate}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formInterviewDate">
+                    <Form.Label>Date of interviews : </Form.Label>
+                    <Form.Control 
+                            type="text"
+                            name="interviewDate"
+                            placeholder="Date of interviews "
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formDecisionDate">
+                    <Form.Label>Acceptance / Refusal : </Form.Label>
+                    <Form.Control 
+                            type="text"
+                            name="decisionDate"
+                            placeholder="Acceptance / Refusal"
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formDecision">
+                    <Form.Label>Final result of the application : </Form.Label>
+                    <Form.Select
+                        aria-label="Final decision on the application"
+                        name="decision"
+                        placeholder="Final result of the application"
+                        value={contactInfo.decision}
+                        onChange={handleChange}
+                    >
+                        {decision.map((decision, index) => {
+                            return (<option key={index} value={decision}>{decision === 'unknown' ? "——" : decision}</option>)
+                        })}
+                    </Form.Select>
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                    Submit
+                    </Button>
+                </Form>
+            </div>
+        </div>
+    :   <div className="main-container">
+            <h1>You are not allowed to see this content</h1>
+        </div>}
+    </>
+  );
+}

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": "https://Jerome-Baille.github.io/job-visualiser",
   "private": true,
+  "proxy": "https://job-application-tracker.azurewebsites.net",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",

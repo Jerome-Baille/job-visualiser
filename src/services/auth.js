@@ -1,4 +1,4 @@
-const baseURL = 'https://job-application-tracker.azurewebsites.net/api/auth';
+const baseURL = '/api/auth';
 // const baseURL = 'http://localhost:3000/api/auth';
 
 export async function register(newUser) {

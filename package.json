@@ -1,6 +1,7 @@
 {
   "name": "job-visualiser",
   "version": "0.1.0",
+  "homepage": "https://Jerome-Baille.github.io/job-visualiser",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -25,6 +26,8 @@
     "yarn": "^1.22.19"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "set PORT=4200 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -49,7 +52,8 @@
     ]
   },
   "devDependencies": {
-    "cz-conventional-changelog": "3.3.0"
+    "cz-conventional-changelog": "3.3.0",
+    "gh-pages": "^4.0.0"
   },
   "config": {
     "commitizen": {

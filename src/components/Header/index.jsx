@@ -25,26 +25,25 @@ export default function Header() {
                     </Navbar.Toggle>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                    {isAuth ?
-                        <NavLink 
-                            to="/create" 
-                            className="nav-link" 
-                            aria-label="Manually add a job application"
-                        >
-                            Add a job application
-                        </NavLink>
-                        : null
-                    }
-                    {isAuth ?
-                        <NavLink 
-                            to="/stats" 
-                            className="nav-link" 
-                            aria-label="Get all the statistics from your job applications"
-                        >
-                            Statistics
-                        </NavLink>
-                        : null
-                    }
+                        {isAuth ?
+                            <>
+                                <NavLink 
+                                    to="/create" 
+                                    className="nav-link" 
+                                    aria-label="Manually add a job application"
+                                >
+                                    Add a job application
+                                </NavLink>
+                                <NavLink 
+                                    to="/stats" 
+                                    className="nav-link" 
+                                    aria-label="Get all the statistics from your job applications"
+                                >
+                                    Statistics
+                                </NavLink>
+                            </>
+                            : null
+                        }
                     </Nav>
 
                     <Nav>

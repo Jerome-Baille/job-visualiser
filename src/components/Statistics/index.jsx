@@ -9,19 +9,23 @@ import { getAllOpportunities } from "../../services/service";
 
 /* Components import */
 import NotLogged from "../NotLogged";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Statistics = () => {
     const [jobs, setJobs] = useState([])
     const { isAuth, user } = useContext(AuthContext);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem("jobs")) {
             var jobs = JSON.parse(localStorage.getItem("jobs"));
             setJobs(jobs);
+            setIsLoaded(true);
         } else {
             if(isAuth){
                 getAllOpportunities(user.token).then(data => {
                 setJobs(data)
+                setIsLoaded(true);
 
                 // add response to the localStorage
                 localStorage.setItem("jobs", JSON.stringify(data));
@@ -30,6 +34,7 @@ const Statistics = () => {
                 })
             } else {
                 setJobs([])
+                setIsLoaded(true);
             }
         }
     } , [isAuth, user.token])
@@ -86,45 +91,51 @@ const Statistics = () => {
     }
 
 
-    return(
-        <>
-        {isAuth ? 
+    if(isLoaded){
+        return(
             <div className="main-container">
-                <h1>Statistics</h1>
-                <Table striped bordered hover size="sm">
-                    <thead>
-                        <tr>
-                            <th>
-                                Week
-                            </th>
-                            <th>
-                                Total <br/> {jobs.length}
-                            </th>
-                            <th className="bg-positive">
-                                Positive <br/>{jobs.filter(job => job.decision === "positive").length}
-                            </th>
-                            <th className="bg-negative">
-                                Negative <br/> {jobs.filter(job => job.decision === "negative").length}
-                            </th>
-                            <th className="bg-expired">
-                                Expired <br/> {jobs.filter(job => job.decision === "expired").length}
-                            </th>
-                            <th className="bg-in-progress">
-                                In progress <br/> {jobs.filter(job => job.decision === "in progress").length}
-                            </th>
-                            <th>
-                                Unknown <br/> {jobs.filter(job => job.decision === "unknown").length}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {addRow()}
-                    </tbody>
-                </Table>
+                {isAuth ? 
+                <>
+                    <h1>Statistics</h1>
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Week
+                                </th>
+                                <th>
+                                    Total <br/> {jobs.length}
+                                </th>
+                                <th className="bg-positive">
+                                    Positive <br/>{jobs.filter(job => job.decision === "positive").length}
+                                </th>
+                                <th className="bg-negative">
+                                    Negative <br/> {jobs.filter(job => job.decision === "negative").length}
+                                </th>
+                                <th className="bg-expired">
+                                    Expired <br/> {jobs.filter(job => job.decision === "expired").length}
+                                </th>
+                                <th className="bg-in-progress">
+                                    In progress <br/> {jobs.filter(job => job.decision === "in progress").length}
+                                </th>
+                                <th>
+                                    Unknown <br/> {jobs.filter(job => job.decision === "unknown").length}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {addRow()}
+                        </tbody>
+                    </Table>
+                </>
+                : <NotLogged/>}
             </div> 
-        :   <NotLogged/>}
-    </>
-    )
+        )
+    } else {
+        return (
+            <LoadingSpinner />
+        )
+    }
 }
 
 export default Statistics;

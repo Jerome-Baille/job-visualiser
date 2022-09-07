@@ -13,12 +13,14 @@ import Form from 'react-bootstrap/Form';
 
 /* Services */
 import { getAllOpportunities } from "../../services/service";
+import LoadingSpinner from "../LoadingSpinner";
 
 
 const Table = () => {
     const windowSize = useWindowSize();
     const navigate = useNavigate()
     const { isAuth, user } = useContext(AuthContext);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const [jobs, setJobs] = useState([])
     const [jobFiltered, setJobFiltered] = useState([])
@@ -32,22 +34,21 @@ const Table = () => {
           var jobs = JSON.parse(localStorage.getItem("jobs"));
           setJobs(jobs);
           setJobFiltered(jobs)
+          setIsLoaded(true);
         } else {
           if(isAuth){
             getAllOpportunities(user.token)
               .then(data => {
                 setJobs(data)
                 setJobFiltered(data)
+                setIsLoaded(true);
 
                 // add response to the localStorage
                 localStorage.setItem("jobs", JSON.stringify(data));
               }).catch(err => {
                   console.log(err)
               })
-          } else {
-            // if user is not logged in, redirect to Login
-            navigate('/auth');
-          }
+          } 
         }
     }, [isAuth, navigate, user.token])
 
@@ -166,58 +167,64 @@ const Table = () => {
     // }
 
 
- return (
-  <>
-    <div className="filter-container">
-      <Form.Select 
-        aria-label="Filter by type" 
-        id="typeFilter" 
-        name="typeFilter" 
-        onChange={handleChange}
-      >
-        <option>Filter by type</option>
-        <option value="all">All</option>
-        <option value="remote">Remote</option>
-        <option value="hybrid">Hybrid</option>
-        <option value="on Site">On site</option>
-      </Form.Select>
+  if(isLoaded){
+    return (
+      <>
+        <div className="filter-container">
+          <Form.Select 
+            aria-label="Filter by type" 
+            id="typeFilter" 
+            name="typeFilter" 
+            onChange={handleChange}
+          >
+            <option>Filter by type</option>
+            <option value="all">All</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="on Site">On site</option>
+          </Form.Select>
 
-      <Form.Select 
-        aria-label="Filter by status"
-        id="decisionFilter"
-        name="decisionFilter"
-        onChange={handleChange}
-      >
-        <option>Filter by status</option>
-        <option value="all">All</option>
-        <option value="negative">negative</option>
-        <option value="positive">positive</option>
-        <option value="expired">expired</option>
-        <option value="in progress">in progress</option>
-        <option value="unknown">unknown</option>
-      </Form.Select>
-      <Button 
-        variant="secondary"
-        onClick={handleClick}
-      >
-        Reset
-      </Button>
-    </div>
-    <table className="table">
-    { jobFiltered.length === 0 ? <tbody><tr><td className="no-data" colSpan={7}>There is no data available</td></tr></tbody> : null }
-    <caption>
-     {/* Job offers I applied, column headers are sortable. */}
-      {jobFiltered.length} results out of {jobs.length} job applications
-    </caption>
-    <TableHead columns={columns} handleSorting={handleSorting} />
-    {/* <TableHead {...{ columns, handleSorting }} /> */}
-    <TableBody columns={columns} jobs={jobFiltered === jobs ? jobs : jobFiltered} />
-   </table>
-   {/* <div className="see-more">
-      <Button variant="outline-primary" id="loadMore" size="sm" onClick={loadMore}>Load more</Button>
-   </div> */}
-  </>
- );
+          <Form.Select 
+            aria-label="Filter by status"
+            id="decisionFilter"
+            name="decisionFilter"
+            onChange={handleChange}
+          >
+            <option>Filter by status</option>
+            <option value="all">All</option>
+            <option value="negative">negative</option>
+            <option value="positive">positive</option>
+            <option value="expired">expired</option>
+            <option value="in progress">in progress</option>
+            <option value="unknown">unknown</option>
+          </Form.Select>
+          <Button 
+            variant="secondary"
+            onClick={handleClick}
+          >
+            Reset
+          </Button>
+        </div>
+        <table className="table">
+        { jobFiltered.length === 0 ? <tbody><tr><td className="no-data" colSpan={7}>There is no data available</td></tr></tbody> : null }
+        <caption>
+        {/* Job offers I applied, column headers are sortable. */}
+          {jobFiltered.length} results out of {jobs.length} job applications
+        </caption>
+        <TableHead columns={columns} handleSorting={handleSorting} />
+        {/* <TableHead {...{ columns, handleSorting }} /> */}
+        <TableBody columns={columns} jobs={jobFiltered === jobs ? jobs : jobFiltered} />
+      </table>
+      {/* <div className="see-more">
+          <Button variant="outline-primary" id="loadMore" size="sm" onClick={loadMore}>Load more</Button>
+      </div> */}
+      </>
+    );
+  } else {
+    return(
+      <LoadingSpinner />
+    )
+  }
 };
 
 export default Table;

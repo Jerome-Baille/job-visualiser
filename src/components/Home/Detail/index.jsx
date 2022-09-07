@@ -15,11 +15,15 @@ import { faCircleCheck, faCircleExclamation, faRobot } from "@fortawesome/free-s
 
 /* Services */
 import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/service";
+import LoadingSpinner from "../../LoadingSpinner";
+import NotLogged from "../../NotLogged";
 
 
 export default function Detail() {
     const { id } = useParams()
     const { isAuth, user } = useContext(AuthContext);
+
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const [job, setJob] = useState([])
     const [contactInfo, setContactInfo] = useState();
@@ -77,6 +81,7 @@ export default function Detail() {
         getOneOpportunity(user.token, id)
             .then(res => {
                 setJob(res)
+                setIsLoaded(true)
             }).catch(err => {
                 console.log(err)
             })
@@ -144,9 +149,10 @@ export default function Detail() {
         })
     };
 
-if(job.length !== 0 && user.userId === job.userId) {
+if(isLoaded) {
   return (
     <div className="main-container">
+        {isAuth?
         <div className="form-container">
             <Toast 
                 onClose={() => setShowSuccess(false)} 
@@ -323,13 +329,12 @@ if(job.length !== 0 && user.userId === job.userId) {
 
             </Form>
         </div>
+        : <NotLogged />}
     </div>
   );
  } else {
     return (
-        <div className="main-container">
-             <h1>You are not allowed to see this content</h1>
-        </div>    
+        <LoadingSpinner />
     )
 }
 }

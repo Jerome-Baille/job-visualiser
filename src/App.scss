@@ -114,6 +114,15 @@ th .down {
   &:first-of-type {
     max-width: 150px;
   }
+
+  @media screen and (max-width: 768px) {
+    &:first-of-type {
+      max-width: 100px;
+    }
+    &:nth-of-type(2) {
+      max-width: 100px;
+    }
+  }
 }
 
 tr:hover td {
@@ -211,6 +220,15 @@ tr:hover td {
   margin-bottom: 20px;
   display: flex;
   column-gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+    row-gap: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
 }
 
 .navbar, 
@@ -313,8 +331,16 @@ tr:hover td {
 .header-login {
   display: flex;
   flex-direction: column;
+  column-gap: 10px;
   align-items: center;
   justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+  .header-login {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 }
 
 .connexion-container {
@@ -351,6 +377,13 @@ tr:hover td {
   min-width: 250px;
 }
 
+@media screen and (max-width: 768px) {
+  .form-container {
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+}
+
 .modal-footer {
   justify-content: center !important;
 }
@@ -361,4 +394,18 @@ tr:hover td {
   justify-content: center;
   align-items: center;
   row-gap: 20px;
+}
+
+.spinner-container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .spinner-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+  }
 }

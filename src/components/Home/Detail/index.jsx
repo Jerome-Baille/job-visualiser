@@ -1,23 +1,32 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AuthContext } from '../../Layout';
+
+/* Bootstrap components */
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/service";
 import Toast from "react-bootstrap/Toast";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faCircleExclamation, faRobot } from "@fortawesome/free-solid-svg-icons";
-import { getTokenAndUserId } from "../../../services/auth";
 import Modal from 'react-bootstrap/Modal';
 
+/* FontAwesome imports */
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck, faCircleExclamation, faRobot } from "@fortawesome/free-solid-svg-icons";
+
+/* Services */
+import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/service";
+
+
 export default function Detail() {
+    const { id } = useParams()
+    const { isAuth, user } = useContext(AuthContext);
+
     const [job, setJob] = useState([])
+    const [contactInfo, setContactInfo] = useState();
+
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
-    const { id } = useParams()
-    const [isAuth, setIsAuth] = useState()
-
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -62,25 +71,18 @@ export default function Detail() {
     ];
 
     useEffect(() => {
-        getTokenAndUserId().then((res) => {
-            if(res.userId !== ''){
-                setIsAuth(res)
+        if(!isAuth){
+            setJob([])
+        }
+        getOneOpportunity(user.token, id)
+            .then(res => {
+                setJob(res)
+            }).catch(err => {
+                console.log(err)
+            })
+    }, [id, isAuth, user.token])
 
-                getOneOpportunity(res.token, id)
-                .then(res => {
-                    setJob(res)
-                }).catch(err => {
-                    console.log(err)
-                })
-            } else {
-                setIsAuth('')
-            }
-        }).catch(err => {
-            console.log(err)
-        })
-      }, [id])
 
-    const [contactInfo, setContactInfo] = useState();
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -90,9 +92,8 @@ export default function Detail() {
   const handleSubmit = (event) => {
     event.preventDefault();
     var opportunity = {...job, ...contactInfo}
-    var token = isAuth.token;
 
-    putOpportunity(token, opportunity)
+    putOpportunity(user.token, opportunity)
         .then(res => {
             if(res.status === 200){
                 // In local storage, in "jobs", replace the old job with the new one
@@ -117,10 +118,8 @@ export default function Detail() {
     event.preventDefault();
 
     setShow(false)
-    
-    var token = isAuth.token;
 
-    deleteOpportunity(token, id)
+    deleteOpportunity(user.token, id)
         .then(res => {
             if(res.status === 200){
             // In local storage, in "jobs", find the job with the id and delete it
@@ -143,9 +142,9 @@ export default function Detail() {
         }).catch(err => {
             console.log(err)
         })
-    }
+    };
 
-if(job.length !== 0 && isAuth.userId === job.userId) {
+if(job.length !== 0 && user.userId === job.userId) {
   return (
     <div className="main-container">
         <div className="form-container">

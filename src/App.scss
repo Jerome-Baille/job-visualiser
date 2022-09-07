@@ -336,6 +336,9 @@ tr:hover td {
     .alt-link {
       color: #335384;
       text-decoration: none;
+      outline: none;
+      border: none;
+      background: transparent;
 
       &:hover {
         color: #5ba7d1;
@@ -350,4 +353,12 @@ tr:hover td {
 
 .modal-footer {
   justify-content: center !important;
+}
+
+.notAuth{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 20px;
 }

@@ -1,35 +1,38 @@
-import { useEffect, useState } from "react";
-import { getAllOpportunities } from "../../services/service";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from '../Layout';
+
+/* Bootstrap components */
 import Table from 'react-bootstrap/Table';
-import { getTokenAndUserId } from "../../services/auth";
+
+/* Services */
+import { getAllOpportunities } from "../../services/service";
+
+/* Components import */
+import NotLogged from "../NotLogged";
 
 const Statistics = () => {
     const [jobs, setJobs] = useState([])
-    const [userAuth, setUserAuth] = useState({});
+    const { isAuth, user } = useContext(AuthContext);
 
     useEffect(() => {
         if (localStorage.getItem("jobs")) {
             var jobs = JSON.parse(localStorage.getItem("jobs"));
             setJobs(jobs);
         } else {
-            getTokenAndUserId().then(res => {
-                setUserAuth(res);
+            if(isAuth){
+                getAllOpportunities(user.token).then(data => {
+                setJobs(data)
 
-                if(res.userId !== ''){
-                    getAllOpportunities(res.token).then(data => {
-                    setJobs(data)
-
-                    // add response to the localStorage
-                    localStorage.setItem("jobs", JSON.stringify(data));
-                    }).catch(err => {
-                        console.log(err)
-                    })
-                } 
-            }).catch(err => {
-                console.log(err);
-            })
+                // add response to the localStorage
+                localStorage.setItem("jobs", JSON.stringify(data));
+                }).catch(err => {
+                    console.log(err)
+                })
+            } else {
+                setJobs([])
+            }
         }
-    } , [])
+    } , [isAuth, user.token])
 
     function addRow() {    
         const currentDate = new Date();          
@@ -85,19 +88,33 @@ const Statistics = () => {
 
     return(
         <>
-        {userAuth.userId !== '' ? 
+        {isAuth ? 
             <div className="main-container">
                 <h1>Statistics</h1>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>Week</th>
-                            <th>Total <br/> {jobs.length}</th>
-                            <th className="bg-positive">Positive <br/>{jobs.filter(job => job.decision === "positive").length}</th>
-                            <th className="bg-negative">Negative <br/> {jobs.filter(job => job.decision === "negative").length}</th>
-                            <th className="bg-expired">Expired <br/> {jobs.filter(job => job.decision === "expired").length}</th>
-                            <th className="bg-in-progress">In progress <br/> {jobs.filter(job => job.decision === "in progress").length}</th>
-                            <th>Unknown <br/> {jobs.filter(job => job.decision === "unknown").length}</th>
+                            <th>
+                                Week
+                            </th>
+                            <th>
+                                Total <br/> {jobs.length}
+                            </th>
+                            <th className="bg-positive">
+                                Positive <br/>{jobs.filter(job => job.decision === "positive").length}
+                            </th>
+                            <th className="bg-negative">
+                                Negative <br/> {jobs.filter(job => job.decision === "negative").length}
+                            </th>
+                            <th className="bg-expired">
+                                Expired <br/> {jobs.filter(job => job.decision === "expired").length}
+                            </th>
+                            <th className="bg-in-progress">
+                                In progress <br/> {jobs.filter(job => job.decision === "in progress").length}
+                            </th>
+                            <th>
+                                Unknown <br/> {jobs.filter(job => job.decision === "unknown").length}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,10 +122,7 @@ const Statistics = () => {
                     </tbody>
                 </Table>
             </div> 
-        :   <div className="main-container">
-                <h1>You are not allowed to see this page</h1>
-            </div>
-        }
+        :   <NotLogged/>}
     </>
     )
 }

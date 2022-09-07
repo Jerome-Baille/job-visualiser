@@ -1,22 +1,19 @@
 import { NavLink } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../Layout';
+
+/* Bootstrap components */
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+
+/* FontAwesome imports */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faRightFromBracket, faRightToBracket, faUser } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
-import { getTokenAndUserId } from '../../services/auth';
+import { faBars, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 
-const Header = () => {
-    const [userAuth, setUserAuth] = useState({});
 
-    useEffect (() => {
-        getTokenAndUserId().then(res => {
-            setUserAuth(res);
-        }).catch(err => {
-            console.log(err);
-        })
-    }, [])
+export default function Header() {
+    const { isAuth } = useContext(AuthContext);
 
     return (
         <header className='header'>
@@ -28,7 +25,7 @@ const Header = () => {
                     </Navbar.Toggle>
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                    {userAuth.userId !== '' ?
+                    {isAuth ?
                         <NavLink 
                             to="/create" 
                             className="nav-link" 
@@ -38,7 +35,7 @@ const Header = () => {
                         </NavLink>
                         : null
                     }
-                    {userAuth.userId !== '' ?
+                    {isAuth ?
                         <NavLink 
                             to="/stats" 
                             className="nav-link" 
@@ -51,34 +48,25 @@ const Header = () => {
                     </Nav>
 
                     <Nav>
-                        {userAuth.userId === '' ? 
-                            <NavLink 
-                                to="/login" 
-                                className="nav-link" 
-                                aria-label="Log into your account"
-                            >
-                                <div className="header-login">
-                                    <FontAwesomeIcon icon={faRightToBracket} />
-                                    <span>Login</span>
-                                </div>
-                            </NavLink>
-                            :   <NavLink to="/logout" className="nav-link" aria-label="Log out of your account">
-                                    <div className='header-login'>
+                        <NavLink 
+                            to="/auth" 
+                            className="nav-link" 
+                            aria-label={isAuth? "Log into your account" : "Log out of your account"}
+                        >
+                            <div className="header-login">
+                                {!isAuth ?
+                                    <>
+                                        <FontAwesomeIcon icon={faRightToBracket} />
+                                        <span>Login</span>
+                                    </>
+                                    :
+                                    <>
                                         <FontAwesomeIcon icon={faRightFromBracket} />
                                         <span>Logout</span>
-                                    </div>
-                                </NavLink>
-                        }
-
-                        {userAuth.userId === '' ?
-                            <NavLink to="/register" className="nav-link" aria-label="Create a new account">
-                                <div className="header-login">
-                                    <FontAwesomeIcon icon={faUser} />
-                                    <span>Register</span>
-                                </div>
-                            </NavLink>
-                            : null
-                        }
+                                    </>
+                                }
+                            </div>
+                        </NavLink>  
                     </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -86,5 +74,3 @@ const Header = () => {
         </header>
     );
 }
-
-export default Header;

@@ -1,20 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../Layout';
+
+/* Components import */
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
+import useWindowSize from "../useWindowSize";
+
+/* Bootstrap components */
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import useWindowSize from "../useWindowSize";
+
+/* Services */
 import { getAllOpportunities } from "../../services/service";
-import { getTokenAndUserId } from "../../services/auth";
+
 
 const Table = () => {
     const windowSize = useWindowSize();
+    const navigate = useNavigate()
+    const { isAuth, user } = useContext(AuthContext);
+
     const [jobs, setJobs] = useState([])
     const [jobFiltered, setJobFiltered] = useState([])
     const [filterForm, setFilterForm] = useState({
       typeFilter: "",
       decisionFilter: ""
-  });
+    });
 
     useEffect(() => {
         if (localStorage.getItem("jobs")) {
@@ -22,26 +33,23 @@ const Table = () => {
           setJobs(jobs);
           setJobFiltered(jobs)
         } else {
-          getTokenAndUserId().then(res => {
-            if(res.userId !== ''){
-              getAllOpportunities(res.token).then(data => {
+          if(isAuth){
+            getAllOpportunities(user.token)
+              .then(data => {
                 setJobs(data)
                 setJobFiltered(data)
-  
+
                 // add response to the localStorage
                 localStorage.setItem("jobs", JSON.stringify(data));
               }).catch(err => {
                   console.log(err)
               })
-            } else {
-              // if user is not logged in, redirect to Login
-              window.location.href = "#/login"
-            }
-          }).catch(err => {
-            console.log(err);
-          })
+          } else {
+            // if user is not logged in, redirect to Login
+            navigate('/auth');
+          }
         }
-    }, [])
+    }, [isAuth, navigate, user.token])
 
 
     var columns = [];

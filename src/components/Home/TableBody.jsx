@@ -1,14 +1,23 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Layout';
+
+/* Bootstrap components */
 import Form from 'react-bootstrap/Form';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+
+/* FontAwesome import */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+
+/* Services */
 import { putOpportunity } from "../../services/service";
-import { getTokenAndUserId } from '../../services/auth';
+
 
 const TableBody = ({ jobs, columns }) => {
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
 
     const status = [
         {
@@ -62,29 +71,22 @@ const TableBody = ({ jobs, columns }) => {
       const handleChange = (data, event) => {
         var opportunity = {...data, decision: event.target.value} 
 
-        getTokenAndUserId().then((res) => {
-            var token = res.token;
+        putOpportunity(user.token, opportunity)
+            .then((res) => {
+                if(res.status === 200) {
+                    // in localstorage, find the key jobs, inside this key find the index of the job with id = data._id, and update the decision to event.target.value
+                    let jobs = JSON.parse(localStorage.getItem('jobs'));
+                    let index = jobs.findIndex(job => job._id === opportunity._id);
+                    jobs[index].decision = event.target.value;
+                    localStorage.setItem('jobs', JSON.stringify(jobs));
 
-            putOpportunity(token, opportunity)
-                .then((res) => {
-                    if(res.status === 200) {
-                        // in localstorage, find the key jobs, inside this key find the index of the job with id = data._id, and update the decision to event.target.value
-                        let jobs = JSON.parse(localStorage.getItem('jobs'));
-                        let index = jobs.findIndex(job => job._id === opportunity._id);
-                        jobs[index].decision = event.target.value;
-                        localStorage.setItem('jobs', JSON.stringify(jobs));
-
-                        window.location.reload();
-                    } else {
-                        console.log(res.body.error)
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
-        }).catch((err) => {
-            console.log(err)
-        })
-
+                    window.location.reload();
+                } else {
+                    console.log(res.body.error)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
       }
 
       const renderTooltip = (tData, data, props) => (

@@ -1,17 +1,32 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../Layout';
+
+/* Bootstrap components */
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { postOpportunity } from "../../services/service";
 import Toast from "react-bootstrap/Toast";
+
+/* FontAwesome imports */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
+/* Services */
+import { postOpportunity } from "../../services/service";
 import { getTokenAndUserId } from "../../services/auth";
 
+/* Components import */
+import NotLogged from "../NotLogged";
+
+
 export default function Create() {
-    const [userAuth, setUserAuth] = useState({});
+    const navigate = useNavigate()
+    const { isAuth } = useContext(AuthContext);
+
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
+
     const [contactInfo, setContactInfo] = useState({
         type: "Remote",
         applicationDate: new Date().toISOString().substring(0, 10),
@@ -20,14 +35,6 @@ export default function Create() {
 
     const type = ["Remote", "Hybrid", "On site"];
     const decision = ["positive", "negative", "in progress", "expired", "unknown"];
-
-    useEffect(() => {
-        getTokenAndUserId().then((res) => {
-            setUserAuth(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-    } ,[]);
 
   const handleChange = (event) => {
     setContactInfo({ ...contactInfo, [event.target.name]: event.target.value });
@@ -63,7 +70,7 @@ export default function Create() {
                 setShowSuccess(true)
 
                 setTimeout(() => {
-                    window.location.href = "/"
+                    navigate('/');
                 }, 2500)
             } else {
                 setShowError(true)
@@ -74,46 +81,43 @@ export default function Create() {
             console.log(err);
         })
     })
-
-
   };
-
 
   return (
     <>
-    {userAuth.userId !== '' ?
+    {isAuth ?
         <div className="main-container">
-                <Toast 
-                    onClose={() => setShowSuccess(false)} 
-                    show={showSuccess} 
-                    delay={2500} 
-                    autohide
-                >
-                    <Toast.Header className="toast-header--success">
-                        <strong className="me-auto">
-                            <FontAwesomeIcon icon={faCircleCheck} />
-                            <span>  Success !</span>
-                        </strong>
-                        
-                    </Toast.Header>
-                    <Toast.Body>The job application has been added to the database !</Toast.Body>
-                </Toast>
+            <Toast 
+                onClose={() => setShowSuccess(false)} 
+                show={showSuccess} 
+                delay={2500} 
+                autohide
+            >
+                <Toast.Header className="toast-header--success">
+                    <strong className="me-auto">
+                        <FontAwesomeIcon icon={faCircleCheck} />
+                        <span>  Success !</span>
+                    </strong>
+                    
+                </Toast.Header>
+                <Toast.Body>The job application has been added to the database !</Toast.Body>
+            </Toast>
 
-                <Toast 
-                    onClose={() => setShowError(false)} 
-                    show={showError} 
-                    delay={2500} 
-                    autohide
-                >
-                    <Toast.Header className="toast-header--delete">
-                        <strong className="me-auto">
-                            <FontAwesomeIcon icon={faCircleExclamation} />
-                            <span>  Error !</span>
-                        </strong>
-                        
-                    </Toast.Header>
-                    <Toast.Body>Oh no, something went wrong ! <br/> Try again</Toast.Body>
-                </Toast>
+            <Toast 
+                onClose={() => setShowError(false)} 
+                show={showError} 
+                delay={2500} 
+                autohide
+            >
+                <Toast.Header className="toast-header--delete">
+                    <strong className="me-auto">
+                        <FontAwesomeIcon icon={faCircleExclamation} />
+                        <span>  Error !</span>
+                    </strong>
+                    
+                </Toast.Header>
+                <Toast.Body>Oh no, something went wrong ! <br/> Try again</Toast.Body>
+            </Toast>
             <div className="form-container">
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="formName">
@@ -214,14 +218,12 @@ export default function Create() {
                     </Form.Select>
                     </Form.Group>
                     <Button variant="primary" type="submit">
-                    Submit
+                        Submit
                     </Button>
                 </Form>
             </div>
         </div>
-    :   <div className="main-container">
-            <h1>You are not allowed to see this content</h1>
-        </div>}
+    : <NotLogged/>}
     </>
   );
 }

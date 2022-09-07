@@ -10,7 +10,7 @@ export async function register(newUser) {
         },
         body: JSON.stringify(newUser)
     })
-    .then((response) => response.json())
+    .then((response) => response.json().then(data => ({status: response.status, body: data})))
     return response;
 }
 

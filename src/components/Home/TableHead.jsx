@@ -1,6 +1,9 @@
+import { useState } from "react";
+
+/* FontAwesome import */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortUp, faSortDown, faSort } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+
 
 const TableHead = ({ columns, handleSorting }) => {
     const [sortField, setSortField] = useState("");
@@ -15,33 +18,32 @@ const TableHead = ({ columns, handleSorting }) => {
     };
 
     return (
-     <thead>
-      <tr>
-       {columns.map(({ label, accessor, sortable }) => {
-            const cl = sortable
-            ? sortField === accessor && order === "asc"
-             ? "up" : sortField === accessor && order === "desc"
-             ? "down" : "default"
-            : "none";
-        return (
-            <th 
-                key={accessor} 
-                id={'th-'+accessor}
-                onClick={sortable ? () => handleSortingChange(accessor) : null}
-                
-            >
-                <div className="th-content">
-                    {label}
-                    <FontAwesomeIcon icon={faSortUp} id="sortUp" className={cl} />
-                    <FontAwesomeIcon icon={faSortDown} id="sortDown" className={cl} />
-                    <FontAwesomeIcon icon={faSort} id="sortDefault" className={cl} />
-                </div>
-            </th>
-        )
-       })}
-      </tr>
-     </thead>
+        <thead>
+            <tr>
+                {columns.map(({ label, accessor, sortable }) => {
+                    const cl = sortable
+                    ? sortField === accessor && order === "asc"
+                        ? "up" : sortField === accessor && order === "desc"
+                        ? "down" : "default"
+                    : "none";
+                return (
+                    <th 
+                        key={accessor} 
+                        id={'th-'+accessor}
+                        onClick={sortable ? () => handleSortingChange(accessor) : null}
+                        
+                    >
+                        <div className="th-content">
+                            {label}
+                            <FontAwesomeIcon icon={faSortUp} id="sortUp" className={cl} />
+                            <FontAwesomeIcon icon={faSortDown} id="sortDown" className={cl} />
+                            <FontAwesomeIcon icon={faSort} id="sortDefault" className={cl} />
+                        </div>
+                    </th>
+                )})}
+            </tr>
+        </thead>
     );
-   };
+};
    
-   export default TableHead;
+export default TableHead;

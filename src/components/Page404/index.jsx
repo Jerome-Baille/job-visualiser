@@ -14,7 +14,7 @@ const Page404 = () => {
                     Page not found.
                 </p>
                 <p className="lead">
-                    The page you’re looking for doesn’t exist.
+                    The page you are looking for does not exist.
                   </p>
                 <Link to='/' className="btn btn-primary">Go Home</Link>
             </div>

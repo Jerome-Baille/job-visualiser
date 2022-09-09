@@ -409,3 +409,10 @@ tr:hover td {
     row-gap: 10px;
   }
 }
+
+.accordion-body>div{
+  display: flex;
+  column-gap: 20px;
+  align-items: center;
+  padding: 10px;
+}

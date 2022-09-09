@@ -42,19 +42,19 @@ const TableBody = ({ jobs, columns }) => {
         }
     ];
 
-    function backgroundColor(decision) {
-        if (decision === 'negative') {
-            return 'rgb(252, 228, 214)';
-        } else if (decision === 'positive') {
-            return 'rgb(169, 208, 142)';
-        } else if (decision === 'in progress') {
-            return 'rgb(221, 235, 247)';
-        } else if (decision === 'expired') {
-            return 'rgb(208, 206, 206)';
-        } else {
-            return 'white';
-        }
-      }
+    // function backgroundColor(decision) {
+    //     if (decision === 'negative') {
+    //         return 'rgb(252, 228, 214)';
+    //     } else if (decision === 'positive') {
+    //         return 'rgb(169, 208, 142)';
+    //     } else if (decision === 'in progress') {
+    //         return 'rgb(221, 235, 247)';
+    //     } else if (decision === 'expired') {
+    //         return 'rgb(208, 206, 206)';
+    //     } else {
+    //         return 'white';
+    //     }
+    //   }
 
       const mouseDownHandler = ( accessor, tData, data, event ) => {
         if( event.button === 0 || event.button === 1 ) {
@@ -139,7 +139,8 @@ const TableBody = ({ jobs, columns }) => {
               return (
                <tr 
                    key={data._id}
-                   style={{'backgroundColor': backgroundColor(data.decision)}}
+                //    style={{'backgroundColor': backgroundColor(data.decision)}}
+                   className={data.decision === 'in progress' ? 'bg-in-progress' : `bg-${data.decision}`}
                >
                 {columns.map(({ accessor }) => {
                  const tData = data[accessor] !== "unknown" ? data[accessor] : "——";

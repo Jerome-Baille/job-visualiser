@@ -7,6 +7,7 @@ import Create from './components/Create';
 import Detail from './components/Home/Detail';
 import Statistics from './components/Statistics';
 import Page404 from './components/Page404';
+import JobBoards from './components/JobBoards';
 
 function App() {
   return (
@@ -14,11 +15,12 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="Create"    element={<Create />} />
-        <Route path="Stats"     element={<Statistics />} />
-        <Route path="/job/:id"  element={<Detail />} />
-        <Route path="auth"      element={<Auth />} />
-        <Route path="*"         element={<Page404/>} />
+        <Route path="Create"      element={<Create />} />
+        <Route path="Stats"       element={<Statistics />} />
+        <Route path="Job-boards"  element={<JobBoards />} />
+        <Route path="/job/:id"    element={<Detail />} />
+        <Route path="auth"        element={<Auth />} />
+        <Route path="*"           element={<Page404/>} />
       </Route>
     </Routes>
     </>

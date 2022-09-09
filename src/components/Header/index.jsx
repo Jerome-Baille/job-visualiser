@@ -41,6 +41,13 @@ export default function Header() {
                                 >
                                     Statistics
                                 </NavLink>
+                                <NavLink 
+                                    to="/job-boards" 
+                                    className="nav-link" 
+                                    aria-label="See the list of all your job boards"
+                                >
+                                    Job Boards
+                                </NavLink>
                             </>
                             : null
                         }

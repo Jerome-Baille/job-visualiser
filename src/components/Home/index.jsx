@@ -7,11 +7,21 @@ const Home = () => {
 
                   <ul>
                     <h3>Color code</h3>
-                    <li>Red means that you received a "negative" answer to your application</li>
-                    <li>Green means that you received a "positive" answer to your application</li>
-                    <li>Blue means that your application is "in progress" (you got an interview)</li>
-                    <li>Grey means that the job offer is no longer available but you did not receive any answer</li>
-                    <li>White means that the status of the job application is unknown at the moment</li>
+                    <li className="bg-negative">
+                      Red: you received a "negative" answer to your application
+                    </li>
+                    <li className="bg-positive">
+                      Green: you received a "positive" answer to your application
+                    </li>
+                    <li className="bg-in-progress">
+                      Blue: your application is "in progress" (you got an interview)
+                    </li>
+                    <li className="bg-expired">
+                      Grey: the job offer is no longer available but you did not receive any answer
+                    </li>
+                    <li>
+                      White: the status of the job application is unknown at the moment
+                    </li>
                   </ul>
                   <ul>
                     <h3>Features under development</h3>

@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/job-visualiser/static/css/main.c8793e44.css",
+    "main.css": "/job-visualiser/static/css/main.e84add98.css",
     "main.js": "/job-visualiser/static/js/main.d44bb20c.js",
     "static/js/787.35b3c9be.chunk.js": "/job-visualiser/static/js/787.35b3c9be.chunk.js",
     "static/media/wttj-logo.png": "/job-visualiser/static/media/wttj-logo.9bc0f8f29d682e5dc70c.png",
@@ -10,12 +10,12 @@
     "static/media/hello-work-logo.svg": "/job-visualiser/static/media/hello-work-logo.f1ca81dceb53292b506907ba9579124f.svg",
     "static/media/linkedin-icon.svg": "/job-visualiser/static/media/linkedin-icon.32e20978a96ff60c1fdc5a8389e532ba.svg",
     "index.html": "/job-visualiser/index.html",
-    "main.c8793e44.css.map": "/job-visualiser/static/css/main.c8793e44.css.map",
+    "main.e84add98.css.map": "/job-visualiser/static/css/main.e84add98.css.map",
     "main.d44bb20c.js.map": "/job-visualiser/static/js/main.d44bb20c.js.map",
     "787.35b3c9be.chunk.js.map": "/job-visualiser/static/js/787.35b3c9be.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c8793e44.css",
+    "static/css/main.e84add98.css",
     "static/js/main.d44bb20c.js"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/job-visualiser/static/css/main.a6cf816a.css",
-    "main.js": "/job-visualiser/static/js/main.e074e03d.js",
+    "main.js": "/job-visualiser/static/js/main.7dadf8dd.js",
     "static/js/787.35b3c9be.chunk.js": "/job-visualiser/static/js/787.35b3c9be.chunk.js",
     "static/media/wttj-logo.png": "/job-visualiser/static/media/wttj-logo.9bc0f8f29d682e5dc70c.png",
     "static/media/apec-logo.png": "/job-visualiser/static/media/apec-logo.93e83714849ae2dc869e.png",
@@ -11,11 +11,11 @@
     "static/media/linkedin-icon.svg": "/job-visualiser/static/media/linkedin-icon.32e20978a96ff60c1fdc5a8389e532ba.svg",
     "index.html": "/job-visualiser/index.html",
     "main.a6cf816a.css.map": "/job-visualiser/static/css/main.a6cf816a.css.map",
-    "main.e074e03d.js.map": "/job-visualiser/static/js/main.e074e03d.js.map",
+    "main.7dadf8dd.js.map": "/job-visualiser/static/js/main.7dadf8dd.js.map",
     "787.35b3c9be.chunk.js.map": "/job-visualiser/static/js/787.35b3c9be.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a6cf816a.css",
-    "static/js/main.e074e03d.js"
+    "static/js/main.7dadf8dd.js"
   ]
 }

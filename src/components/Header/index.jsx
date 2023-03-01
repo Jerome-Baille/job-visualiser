@@ -17,7 +17,7 @@ export default function Header() {
 
     return (
         <header className='header'>
-            <Navbar bg="light" expand="md">
+            <Navbar bg="light" collapseOnSelect  expand="md">
                 <Container>
                     <NavLink to="/" className="navbar-brand" aria-label="Go to homepage">Job Visualiser</NavLink>
                     <Navbar.Toggle aria-controls="basic-navbar-nav">
@@ -27,34 +27,42 @@ export default function Header() {
                     <Nav className="me-auto">
                         {isAuth ?
                             <>
-                                <NavLink 
+                                <Nav.Link 
+                                    eventKey={1}
+                                    as={NavLink}
                                     to="/create" 
                                     className="nav-link" 
                                     aria-label="Manually add a job application"
                                 >
                                     Add a job application
-                                </NavLink>
-                                <NavLink 
+                                </Nav.Link>
+                                <Nav.Link 
+                                    eventKey={2}
+                                    as={NavLink}
                                     to="/stats" 
                                     className="nav-link" 
                                     aria-label="Get all the statistics from your job applications"
                                 >
                                     Statistics
-                                </NavLink>
-                                <NavLink 
+                                </Nav.Link>
+                                <Nav.Link 
+                                    eventKey={3}
+                                    as={NavLink}
                                     to="/job-boards" 
                                     className="nav-link" 
                                     aria-label="See the list of all your job boards"
                                 >
                                     Job Boards
-                                </NavLink>
+                                </Nav.Link>
                             </>
                             : null
                         }
                     </Nav>
 
                     <Nav>
-                        <NavLink 
+                        <Nav.Link 
+                            eventKey={4}
+                            as={NavLink}
                             to="/auth" 
                             className="nav-link" 
                             aria-label={isAuth? "Log into your account" : "Log out of your account"}
@@ -72,7 +80,7 @@ export default function Header() {
                                     </>
                                 }
                             </div>
-                        </NavLink>  
+                        </Nav.Link>  
                     </Nav>
                     </Navbar.Collapse>
                 </Container>

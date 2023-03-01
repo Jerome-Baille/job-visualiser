@@ -1,4 +1,5 @@
-const baseURL = 'https://job-application-tracker.azurewebsites.net/api/auth';
+const baseURL = 'https://job-tracker.jerome-baille.fr/api/auth';
+// const baseURL = 'https://backend-job-visualiser.onrender.com/api/auth';
 // const baseURL = 'http://localhost:3000/api/auth';
 
 export async function register(newUser) {

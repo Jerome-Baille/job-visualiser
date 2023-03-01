@@ -1,7 +1,7 @@
 {
   "name": "job-visualiser",
   "version": "0.1.0",
-  "homepage": "https://Jerome-Baille.github.io/job-visualiser/",
+  "homepage": "https://job-tracker.jerome-baille.fr/",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",

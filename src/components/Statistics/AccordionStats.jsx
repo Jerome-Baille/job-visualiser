@@ -28,7 +28,11 @@ const AccordionStats = ({row, jobs}) => {
             return jobDate >= date && jobDate <= endingDate;
         })
 
-        while(startDate <= endingDate && startDate <= new Date()){
+        // new Date() + 6 days
+        var nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 6);
+
+        while(startDate <= endingDate && startDate <= nextWeek) {
             var begin = moment(startDate).startOf('isoWeek');
             var end = moment(startDate).endOf('isoWeek');
 

@@ -65,8 +65,9 @@ export default function Auth() {
       .then(res => {
         setIsLoaded(true);
         if(res.status === 200) {
-          document.cookie = `token=${res.body.token};expires='2592000';path=/;`;
-          document.cookie = `userId=${res.body.userId};expires='2592000';path=/;`;
+          var expires = (new Date(Date.now()+ 30*86400*1000)).toUTCString();
+          document.cookie = `token=${res.body.token}; expires=${expires}; path=/; sameSite=strict;`;
+          document.cookie = `userId=${res.body.userId}; expires=${expires}; path=/; sameSite=strict;`;
 
           setToastMessage('You are now logged in !');
           setShowSuccess(true)
@@ -115,6 +116,7 @@ export default function Auth() {
   if(isLoaded){
     return (
       <div className="main-container">
+        <div className={showSuccess? "latte" : null + showError? "latte" : null}></div>
         <Toast 
             onClose={() => setShowSuccess(false)} 
             show={showSuccess} 

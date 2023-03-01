@@ -13,10 +13,13 @@ import { getAllOpportunities } from "../../services/service";
 import NotLogged from "../NotLogged";
 import LoadingSpinner from "../LoadingSpinner";
 import AccordionStats from './AccordionStats';
+import { logout } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Statistics = () => {
+    const navigate = useNavigate()
     const [jobs, setJobs] = useState([])
-    const { isAuth, user } = useContext(AuthContext);
+    const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const [content, setContent] = useState([]);
@@ -26,14 +29,32 @@ const Statistics = () => {
             var jobs = JSON.parse(localStorage.getItem("jobs"));
             setJobs(jobs);
             setIsLoaded(true);
+
+            addRow(jobs)
         } else {
             if(isAuth){
-                getAllOpportunities(user.token).then(data => {
-                setJobs(data)
-                setIsLoaded(true);
+                getAllOpportunities(user.token)
+                .then(data => {
+                    if(data.status === 200){
+                        setJobs(data)
 
-                // add response to the localStorage
-                localStorage.setItem("jobs", JSON.stringify(data));
+                        addRow(data)
+                        setIsLoaded(true);
+
+                        // add response to the localStorage
+                        localStorage.setItem("jobs", JSON.stringify(data));
+                    }
+                    if(data.status === 401){
+                        logout().then(() => {
+                            setIsLoaded(true);            
+                            setIsAuth(false);
+                            setUser({})
+                    
+                            setTimeout(() => {
+                                navigate('/auth');
+                            }, 2500)
+                        })
+                    }
                 }).catch(err => {
                     console.log(err)
                 })
@@ -43,7 +64,6 @@ const Statistics = () => {
             }
         }
 
-        addRow()
         // eslint-disable-next-line
     } , [isAuth, user.token])
 
@@ -57,7 +77,7 @@ const Statistics = () => {
         return diffWeeks;
     }
 
-    function addRow() {    
+    function addRow(dataJobs) {    
         const currentDate = new Date();          
         // var startingDate = new Date(2022, 4, 30);
         var startingDate = new Date(2022, 5, 1);
@@ -71,7 +91,7 @@ const Statistics = () => {
             let year    = startingDate.getFullYear();
 
             // filter the jobs to only return the ones that correspond to month and year
-            filterArray = jobs.filter(job => {
+            filterArray = dataJobs.filter(job => {
                 var jobDate = new Date(job.applicationDate);
                 return jobDate.getMonth() + 1 === month && jobDate.getFullYear() === year;
             })

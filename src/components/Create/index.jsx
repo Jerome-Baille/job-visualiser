@@ -43,10 +43,13 @@ export default function Create() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    var applicationYear = contactInfo.applicationDate.substring(0, 4);
+    applicationYear = +applicationYear;
+
     var date = new Date(contactInfo.applicationDate);
     var isoDate = date.toISOString();
 
-    var opportunity = {...contactInfo, applicationDate: isoDate}
+    var opportunity = {...contactInfo, applicationDate: isoDate, applicationYear: applicationYear}
 
     getTokenAndUserId().then((res) => {
         setContactInfo({ ...contactInfo, userId: res.userId });
@@ -57,7 +60,6 @@ export default function Create() {
 
         postOpportunity(token, opportunity)
         .then(res => {
-            console.log(res)
             opportunity = {...opportunity, _id : res.body.id}
 
             if(res.status === 201) {
@@ -74,7 +76,6 @@ export default function Create() {
                 }, 2500)
             } else {
                 setShowError(true)
-                console.log(res.body.error)
             }
         })
         .catch(err => {
@@ -87,6 +88,7 @@ export default function Create() {
     <>
     {isAuth ?
         <div className="main-container">
+            <div className={showSuccess? "latte" : null + showError? "latte" : null}></div>
             <Toast 
                 onClose={() => setShowSuccess(false)} 
                 show={showSuccess} 

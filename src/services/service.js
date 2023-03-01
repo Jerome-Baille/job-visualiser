@@ -1,5 +1,6 @@
-const baseURL = 'https://job-application-tracker.azurewebsites.net/api';
-// const baseURL = 'http://localhost:3000/api';
+// const baseURL = 'https://backend-job-visualiser.onrender.com/api';
+// const baseURL = 'https://localhost:3000/api';
+const baseURL = 'https://job-tracker.jerome-baille.fr/api';
 
 export async function getAllOpportunities(token) {
     const response = await fetch(baseURL,{
@@ -11,7 +12,7 @@ export async function getAllOpportunities(token) {
             'Content-Type': 'application/json'
         },
     })
-    .then((response) => response.json())
+    .then((response) => response.json().then(data => ({status: response.status, body: data})))
     return response;
 }
 
@@ -25,7 +26,7 @@ export async function getOneOpportunity(token, id) {
             'Content-Type': 'application/json'
         },
     })
-    .then((response) => response.json())
+    .then((response) => response.json().then(data => ({status: response.status, body: data})))
     return response;
 }
 
@@ -74,3 +75,43 @@ export async function deleteOpportunity(token, id) {
     .then((response) => response.json().then(data => ({status: response.status, body: data})))
     return response;
 }
+
+
+// export opportunities as an excel spreadsheet
+export async function exportOpportunities(selectedYear, selectedFormat, userId, token) {
+    const response = await fetch(`${baseURL}/${selectedFormat}/export/${userId}/${selectedYear}`, {
+      method: 'GET',
+      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    });
+    const blob = await response.blob();
+
+    let filename;
+
+    if(selectedFormat === 'excel') {
+        filename = `opportunities-${Date.now()}.xlsx`;
+    } else {
+        filename = `opportunities-${Date.now()}.pdf`;
+    }
+
+    if (window.navigator.msSaveOrOpenBlob) {
+      // For IE and Edge browsers
+      window.navigator.msSaveBlob(blob, filename);
+    } else {
+      // For other browsers
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 0);
+    }
+  }  

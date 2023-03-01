@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from '../../Layout';
 
 /* Bootstrap components */
@@ -17,11 +17,13 @@ import { faCircleCheck, faCircleExclamation, faRobot } from "@fortawesome/free-s
 import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/service";
 import LoadingSpinner from "../../LoadingSpinner";
 import NotLogged from "../../NotLogged";
+import { logout } from "../../../services/auth";
 
 
 export default function Detail() {
+    const navigate = useNavigate()
     const { id } = useParams()
-    const { isAuth, user } = useContext(AuthContext);
+    const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
 
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -80,12 +82,24 @@ export default function Detail() {
         }
         getOneOpportunity(user.token, id)
             .then(res => {
-                setJob(res)
+                if(res.status === 200){
+                setJob(res.body)
                 setIsLoaded(true)
+                }
+                if(res.status === 401){
+                    logout().then(() => {
+                    setIsLoaded(true);            
+                    setIsAuth(false);
+                    setUser({})
+            
+                    setTimeout(() => {
+                        navigate('/auth');
+                    }, 2500)
+                })}
             }).catch(err => {
                 console.log(err)
             })
-    }, [id, isAuth, user.token])
+    }, [id, isAuth, setIsAuth, user.token, navigate, setUser])
 
 
 
@@ -138,7 +152,7 @@ export default function Detail() {
             setShowDelete(true)
 
             setTimeout(() => {
-                window.location.href = "/"
+                navigate('/');
             }, 3000)
 
             } else {
@@ -152,6 +166,7 @@ export default function Detail() {
 if(isLoaded) {
   return (
     <div className="main-container">
+        <div className={showSuccess? "latte" : null + showError? "latte" : null + showDelete? "latte" : null}></div>
         {isAuth?
         <div className="form-container">
             <Toast 

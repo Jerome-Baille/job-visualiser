@@ -14,10 +14,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleExclamation, faRobot } from "@fortawesome/free-solid-svg-icons";
 
 /* Services */
-import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/service";
+import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/opportunityService";
 import LoadingSpinner from "../../LoadingSpinner";
 import NotLogged from "../../NotLogged";
-import { logout } from "../../../services/auth";
+import { logout } from "../../../services/authService";
 
 
 export default function Detail() {

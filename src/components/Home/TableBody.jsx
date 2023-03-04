@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 
 /* Services */
-import { putOpportunity } from "../../services/service";
+import { putOpportunity } from "../../services/opportunityService";
 
 
 const TableBody = ({ jobs, columns }) => {

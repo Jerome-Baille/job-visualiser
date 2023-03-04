@@ -12,10 +12,10 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 /* Services */
-import { getAllOpportunities } from "../../services/service";
+import { getAllOpportunities } from "../../services/opportunityService";
 import LoadingSpinner from "../LoadingSpinner";
 import PaginationSystem from "./PaginationSystem";
-import { logout } from "../../services/auth";
+import { logout } from "../../services/authService";
 
 
 const Table = () => {

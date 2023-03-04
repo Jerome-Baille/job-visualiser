@@ -7,13 +7,13 @@ import { Chart } from "react-google-charts";
 import Table from 'react-bootstrap/Table';
 
 /* Services */
-import { getAllOpportunities } from "../../services/service";
+import { getAllOpportunities } from "../../services/opportunityService";
 
 /* Components import */
 import NotLogged from "../NotLogged";
 import LoadingSpinner from "../LoadingSpinner";
 import AccordionStats from './AccordionStats';
-import { logout } from '../../services/auth';
+import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 const Statistics = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../Layout';
-import { exportOpportunities } from '../../services/service';
+import { exportOpportunities } from '../../services/opportunityService';
 import { Button } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 

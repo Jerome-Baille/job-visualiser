@@ -12,7 +12,7 @@ import { faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 /* Services */
-import { login, logout, register } from '../../services/auth';
+import { login, logout, register } from '../../services/authService';
 import LoadingSpinner from '../LoadingSpinner';
 
 
@@ -65,9 +65,11 @@ export default function Auth() {
       .then(res => {
         setIsLoaded(true);
         if(res.status === 200) {
-          var expires = (new Date(Date.now()+ 30*86400*1000)).toUTCString();
-          document.cookie = `token=${res.body.token}; expires=${expires}; path=/; sameSite=strict;`;
-          document.cookie = `userId=${res.body.userId}; expires=${expires}; path=/; sameSite=strict;`;
+          // Get the expiration time from the token
+          const expirationTime = new Date(new Date().getTime() + res.body.expiresIn * 1000);
+
+          document.cookie = `token=${res.body.token}; expires=${expirationTime.toUTCString()}; path=/; sameSite=strict;`;
+          document.cookie = `userId=${res.body.userId}; expires=${expirationTime.toUTCString()}; path=/; sameSite=strict;`;
 
           setToastMessage('You are now logged in !');
           setShowSuccess(true)

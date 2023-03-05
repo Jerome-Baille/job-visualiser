@@ -54,6 +54,15 @@ export default function Header() {
                                 >
                                     Job Boards
                                 </Nav.Link>
+                                <Nav.Link 
+                                    eventKey={4}
+                                    as={NavLink}
+                                    to="/profile" 
+                                    className="nav-link" 
+                                    aria-label="See your profile"
+                                >
+                                    Profile
+                                </Nav.Link>
                             </>
                             : null
                         }

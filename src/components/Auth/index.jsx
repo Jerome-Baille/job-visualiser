@@ -55,12 +55,8 @@ export default function Auth() {
     })
   }
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-
-    var user = {...userInfo}
-    setIsLoaded(false);
-
+  // write a function that logs the user in
+  function logUserIn(user) {
     login(user)
       .then(res => {
         setIsLoaded(true);
@@ -89,10 +85,18 @@ export default function Auth() {
       })
   }
 
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    var user = {...userInfo}
+    setIsLoaded(false);
+
+    logUserIn(user)
+  }
+
   const handleRegister = (event) => {
     event.preventDefault();
     setIsLoaded(false);
-  
     var newUser = {...userInfo}
   
     register(newUser)
@@ -109,8 +113,12 @@ export default function Auth() {
           setToastMessage(res.body.error)
           setShowError(true)
         }
-      }).catch(err => {
+      })
+      .catch(err => {
         console.log(err);
+      })
+      .finally(() => {
+        logUserIn(newUser)
       })
   }
 

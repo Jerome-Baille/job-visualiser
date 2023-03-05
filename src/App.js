@@ -9,6 +9,7 @@ import Detail from './components/Home/Detail';
 import Statistics from './components/Statistics';
 import Page404 from './components/Page404';
 import JobBoards from './components/JobBoards';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="Create"      element={<Create />} />
           <Route path="Stats"       element={<Statistics />} />
           <Route path="Job-boards"  element={<JobBoards />} />
+          <Route path="Profile"         element={<Profile />} />
           <Route path="/job/:id"    element={<Detail />} />
           <Route path="*"           element={<Page404/>} />
         </Route>

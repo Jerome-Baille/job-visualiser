@@ -27,7 +27,17 @@ export default function Detail() {
 
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const [job, setJob] = useState([])
+    const [job, setJob] = useState({
+        name: '',
+        company: '',
+        location: '',
+        type: '',
+        link: '',
+        applicationDate: '',
+        interviewDate: '',
+        decisionDate: '',
+        decision: ''
+      })
     const [contactInfo, setContactInfo] = useState();
 
     const [showSuccess, setShowSuccess] = useState(false);
@@ -77,6 +87,7 @@ export default function Detail() {
     ];
 
     useEffect(() => {
+        if(!user.token) return;
         if(!isAuth){
             setJob([])
         }
@@ -223,7 +234,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text" 
                         name="name"
-                        placeholder={job.name}
+                        placeholder="Title of the job"
+                        defaultValue={job.name}
                         onChange={handleChange} 
                     />
                 {/* <Form.Text className="text-muted">
@@ -235,7 +247,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text"
                         name="company"
-                        placeholder={job.company}
+                        placeholder="Company name"
+                        defaultValue={job.company}
                         onChange={handleChange}
                     />
                 </Form.Group>
@@ -244,7 +257,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text"
                         name="location"
-                        placeholder={job.location}
+                        placeholder="Location"
+                        defaultValue={job.location}
                         onChange={handleChange}
                     />
                 </Form.Group>
@@ -254,7 +268,8 @@ if(isLoaded) {
                         aria-label="Type of job"
                         id="type"
                         name="type"
-                        placeholder={job.type}
+                        placeholder="Type of job"
+                        defaultValue={job.type}
                         onChange={handleChange}
                     >
                         <option>{job.type}</option>
@@ -269,7 +284,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text"
                         name="link"
-                        placeholder={job.link}
+                        placeholder="Link to the job offer or company website"
+                        defaultValue={job.link}
                         onChange={handleChange}
                     />
                 </Form.Group>
@@ -288,7 +304,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text"
                         name="interviewDate"
-                        placeholder={job.interviewDate}
+                        placeholder="Interview date(s)"
+                        defaultValue={job.interviewDate}
                         onChange={handleChange}
                     />
                 </Form.Group>
@@ -297,7 +314,8 @@ if(isLoaded) {
                 <Form.Control 
                         type="text"
                         name="decisionDate"
-                        placeholder={job.decisionDate}
+                        placeholder="Decision date"
+                        defaultValue={job.decisionDate}
                         onChange={handleChange}
                     />
                 </Form.Group>
@@ -307,7 +325,8 @@ if(isLoaded) {
                         aria-label="Final decision on the candidacy"
                         id="decision"
                         name="decision"
-                        placeholder={job.decision}
+                        placeholder="Final decision on the candidacy"
+                        defaultValue={job.decision}
                         onChange={handleChange}
                     >
                         <option>{job.decision === "unknown" ? "——" : job.decision}</option>
@@ -339,9 +358,6 @@ if(isLoaded) {
                     </Button>
                     </Modal.Footer>
                 </Modal>
-
-
-
             </Form>
         </div>
         : <NotLogged />}

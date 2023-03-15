@@ -136,9 +136,9 @@ export async function exportOpportunities(selectedYear, selectedFormat, userId, 
 
         let filename;
         if (selectedFormat === "excel") {
-            filename = `opportunities-${Date.now()}.xlsx`;
+            filename = `Jerome_BAILLE_-_Tableau_de_bord_des_candidature_-_${Date.now()}.xlsx`;
         } else {
-            filename = `opportunities-${Date.now()}.pdf`;
+            filename = `Jerome_BAILLE_-_Tableau_de_bord_des_candidature_-_${Date.now()}.pdf`;
         }
 
         if (window.navigator.msSaveOrOpenBlob) {

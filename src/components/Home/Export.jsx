@@ -29,6 +29,7 @@ function ExportData() {
             <option value="">Select a year</option>
             <option value="2023">2023</option>
             <option value="2022">2022</option>
+            <option value="0000">All</option>
         </Form.Select>
         <Form.Select 
             value={selectedFormat} 

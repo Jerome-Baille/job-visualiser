@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from '../../Layout';
 
@@ -24,6 +24,7 @@ export default function Detail() {
     const navigate = useNavigate()
     const { id } = useParams()
     const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
+    const decisionDateRef = useRef(null);
 
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -113,6 +114,15 @@ export default function Detail() {
     }, [id, isAuth, setIsAuth, user.token, navigate, setUser])
 
 
+    const handleSetToday = () => {
+        const today = new Date();
+        const day = today.getDate().toString().padStart(2, '0');
+        const month = (today.getMonth() + 1).toString().padStart(2, '0');
+        const year = today.getFullYear().toString();
+        const todayFormatted = `Refus le ${day}/${month}/${year}`;
+        decisionDateRef.current.value = todayFormatted;
+        setContactInfo({ ...contactInfo, decisionDate: todayFormatted });
+      };
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -122,7 +132,7 @@ export default function Detail() {
   const handleSubmit = (event) => {
     event.preventDefault();
     var opportunity = {...job, ...contactInfo}
-
+    
     putOpportunity(user.token, opportunity)
         .then(res => {
             if(res.status === 200){
@@ -317,7 +327,11 @@ if(isLoaded) {
                         placeholder="Decision date"
                         defaultValue={job.decisionDate}
                         onChange={handleChange}
+                        ref={decisionDateRef}
                     />
+                <Button variant="secondary" onClick={handleSetToday}>
+                    Aujourd'hui
+                </Button>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formDecision">
                 <Form.Label>Résultat final de la candidature : </Form.Label>

@@ -316,7 +316,6 @@ if(isLoaded) {
                 <Form.Label>Type de poste : </Form.Label>
                 <Form.Select 
                         aria-label="Type of job"
-                        id="type"
                         name="type"
                         placeholder="Type of job"
                         defaultValue={job.type}
@@ -377,7 +376,6 @@ if(isLoaded) {
                 <Form.Label>Résultat final de la candidature : </Form.Label>
                 <Form.Select 
                         aria-label="Final decision on the candidacy"
-                        id="decision"
                         name="decision"
                         placeholder="Final decision on the candidacy"
                         defaultValue={job.decision}

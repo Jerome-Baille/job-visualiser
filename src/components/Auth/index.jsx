@@ -69,6 +69,8 @@ export default function Auth() {
           document.cookie = `refreshToken=${res.body.refreshToken}; expires=${refreshTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
           document.cookie = `userId=${res.body.userId}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
 
+          localStorage.removeItem("jobs");
+
           setToastMessage('You are now logged in !');
           setShowSuccess(true)
 

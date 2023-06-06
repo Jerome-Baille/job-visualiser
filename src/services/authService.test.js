@@ -22,9 +22,9 @@ describe('authService', () => {
     it('logs in a user', async () => {
       const response = await login(mockUser);
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
+      expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('userId');
-      Cookies.set('token', response.body.token); // Set token as a cookie
+      Cookies.set('accessToken', response.body.accessToken); // Set token as a cookie
     });
 
     it('throws an error if login fails', async () => {
@@ -33,22 +33,22 @@ describe('authService', () => {
   });
 
   describe('getTokenAndUserId', () => {
-    it('gets the token and userId from cookies', async () => {
-      Cookies.set('token', 'testtoken');
+    it('gets the accessToken and userId from cookies', async () => {
+      Cookies.set('accessToken', 'testtoken');
       Cookies.set('userId', 'testuserid');
-      const { token, userId } = await getTokenAndUserId();
-      expect(token).toBe('testtoken');
+      const { accessToken, userId } = await getTokenAndUserId();
+      expect(accessToken).toBe('testtoken');
       expect(userId).toBe('testuserid');
     });
   });
 
   describe('logout', () => {
     it('clears cookies and local storage', async () => {
-      Cookies.set('token', 'testtoken');
+      Cookies.set('accessToken', 'testtoken');
       Cookies.set('userId', 'testuserid');
       localStorage.setItem('jobs', 'testjobs');
       await logout();
-      expect(Cookies.get('token')).toBeUndefined();
+      expect(Cookies.get('accessToken')).toBeUndefined();
       expect(Cookies.get('userId')).toBeUndefined();
       expect(localStorage.getItem('jobs')).toBeNull();
     });
@@ -57,17 +57,17 @@ describe('authService', () => {
   describe('deleteUser', () => {
     beforeAll(async () => {
       const response = await login(mockUser);
-      Cookies.set('token', response.body.token); // Set token as a cookie
+      Cookies.set('accessToken', response.body.accessToken); // Set token as a cookie
     });
 
     it('deletes a user', async () => {
-      const token = Cookies.get('token');
-      const response = await deleteUser(mockUser, token);
+      const accessToken = Cookies.get('accessToken');
+      const response = await deleteUser(mockUser, accessToken);
       expect(response.status).toBe(200);
     });
 
     it('throws an error if deletion fails', async () => {
-      await expect(deleteUser(mockUser, Cookies.get('token'))).rejects.toThrow('Failed to delete user');
+      await expect(deleteUser(mockUser, Cookies.get('accessToken'))).rejects.toThrow('Failed to delete user');
     });
   });
 });

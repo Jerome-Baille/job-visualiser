@@ -51,9 +51,9 @@ export default function Create() {
 
         opportunity = {...opportunity, userId: res.userId}
 
-        var token = res.token;
+        var accessToken = res.accessToken;
 
-        postOpportunity(token, opportunity)
+        postOpportunity(accessToken, opportunity)
         .then(res => {
             opportunity = {...opportunity, _id : res.body.id}
 

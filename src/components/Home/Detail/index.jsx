@@ -18,7 +18,10 @@ import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../s
 import LoadingSpinner from "../../LoadingSpinner";
 import NotLogged from "../../NotLogged";
 import { logout } from "../../../services/authService";
+import { getTokenAndUserId } from '../../../services/authService';
 
+// Base API URL
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 export default function Detail() {
     const navigate = useNavigate()
@@ -88,11 +91,11 @@ export default function Detail() {
     ];
 
     useEffect(() => {
-        if(!user.token) return;
+        if(!user.accessToken) return;
         if(!isAuth){
             setJob([])
         }
-        getOneOpportunity(user.token, id)
+        getOneOpportunity(user.accessToken, id)
             .then(res => {
                 if(res.status === 200){
                 setJob(res.body)
@@ -108,10 +111,47 @@ export default function Detail() {
                         navigate('/auth');
                     }, 2500)
                 })}
+                if(res.status === 403){
+                    const checkAuthentication = async () => {
+                        try {
+                          const { accessToken, refreshToken, expirationDate } = await getTokenAndUserId();
+                          if (!accessToken || new Date(expirationDate) < new Date()) {
+                            // Access token is expired, try to get a new one using the refresh token
+                            const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
+                              method: 'POST',
+                              headers: {
+                                'Authorization': `Bearer ${refreshToken}`
+                              }
+                            });
+                            if (response.status === 200) {
+                              const { accessToken: newAccessToken, expirationDate: newExpirationDate } = await response.json();
+                              setIsAuth(false);;
+                              const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
+                    
+                              document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+                            } else {
+                                setIsAuth(false);;
+                            }
+                          } else {
+                            const response = await fetch(`${API_BASE_URL}/auth/check`, {
+                              method: 'POST',
+                              headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                              }
+                            });
+                            setIsAuth(response.status === 200);
+                          }
+                        } catch (error) {
+                          console.log(error);
+                          setIsAuth(false);;
+                        }
+                      };
+                      checkAuthentication();
+                }
             }).catch(err => {
                 console.log(err)
             })
-    }, [id, isAuth, setIsAuth, user.token, navigate, setUser])
+    }, [id, isAuth, setIsAuth, user.accessToken, navigate, setUser])
 
 
     const handleSetToday = () => {
@@ -133,7 +173,7 @@ export default function Detail() {
     event.preventDefault();
     var opportunity = {...job, ...contactInfo}
     
-    putOpportunity(user.token, opportunity)
+    putOpportunity(user.accessToken, opportunity)
         .then(res => {
             if(res.status === 200){
                 // In local storage, in "jobs", replace the old job with the new one
@@ -159,7 +199,7 @@ export default function Detail() {
 
     setShow(false)
 
-    deleteOpportunity(user.token, id)
+    deleteOpportunity(user.accessToken, id)
         .then(res => {
             if(res.status === 200){
             // In local storage, in "jobs", find the job with the id and delete it

@@ -55,9 +55,9 @@ const TableBody = ({ jobs, columns }) => {
       }
 
       const handleChange = (data, event) => {
-        var opportunity = {...data, decision: event.target.value} 
+        const opportunity = {...data, decision: event.target.value};
 
-        putOpportunity(user.token, opportunity)
+        putOpportunity(user.accessToken, opportunity)
             .then((res) => {
                 if(res.status === 200) {
                     // in localstorage, find the key jobs, inside this key find the index of the job with id = data._id, and update the decision to event.target.value
@@ -76,7 +76,7 @@ const TableBody = ({ jobs, columns }) => {
       }
 
       const renderTooltip = (tData, data, props) => (
-        <Tooltip id={data._id} {...props}>
+        <Tooltip id={`tooltip-${data._id}`} {...props}>
           {tData}
         </Tooltip>
       );
@@ -99,20 +99,25 @@ const TableBody = ({ jobs, columns }) => {
         }
 
         if(accessor === 'decision') {
-            return       <Form.Select 
-                            aria-label="Final decision on the candidacy"
-                            id="decision"
-                            name="decision"
-                            size="sm"
-                            className="decision-select"
-                            onChange={(event) => handleChange(data, event)}
-                        >
-                            <option>{tData}</option>
+            // Add the unique identifier to the input element's "id" attribute
+            const inputId = `decision-${data._id}`;
 
-                            {status.map((status) => {
-                                return (tData === status.label ? null : <option key={status.value} value={status.value}>{status.label}</option>)
-                            })}
-                        </Form.Select>
+            return (
+                <Form.Select 
+                    aria-label="Final decision on the candidacy"
+                    id={inputId}
+                    name="decision"
+                    size="sm"
+                    className="decision-select"
+                    onChange={(event) => handleChange(data, event)}
+                >
+                    <option>{tData}</option>
+
+                    {status.map((status) => {
+                        return (tData === status.label ? null : <option key={status.value} value={status.value}>{status.label}</option>)
+                    })}
+                </Form.Select>
+            )
         }
 
         return tData;

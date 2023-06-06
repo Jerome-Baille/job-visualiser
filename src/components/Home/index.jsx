@@ -16,7 +16,6 @@ const Home = () => {
                         <ul>
                           <h3>Features under development</h3>
                           <li>Add the possibility to display 10/20/50 or all results through a select input</li>
-                          <li>Add a search bar</li>
                           <li>Add a "Favorite" column</li>
                         </ul>
                       <div>

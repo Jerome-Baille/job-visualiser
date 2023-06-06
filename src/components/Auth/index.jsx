@@ -62,10 +62,12 @@ export default function Auth() {
         setIsLoaded(true);
         if(res.status === 200) {
           // Get the expiration time from the token
-          const expirationTime = new Date(new Date().getTime() + res.body.expiresIn * 1000);
+          const accessTokenExpiresIn = new Date(new Date().getTime() + res.body.accessTokenExpiresIn * 1000);
+          const refreshTokenExpiresIn = new Date(new Date().getTime() + res.body.refreshTokenExpiresIn * 1000);
 
-          document.cookie = `token=${res.body.token}; expires=${expirationTime.toUTCString()}; path=/; sameSite=strict;`;
-          document.cookie = `userId=${res.body.userId}; expires=${expirationTime.toUTCString()}; path=/; sameSite=strict;`;
+          document.cookie = `accessToken=${res.body.accessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+          document.cookie = `refreshToken=${res.body.refreshToken}; expires=${refreshTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+          document.cookie = `userId=${res.body.userId}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
 
           setToastMessage('You are now logged in !');
           setShowSuccess(true)

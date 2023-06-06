@@ -20,8 +20,8 @@ export default function Layout() {
         const fetchTokenAndUserId = async () => {
             try {
               const res = await getTokenAndUserId();
-              setIsAuth(!!res.token);
-              setUser(!!res.token ? res : {});
+              setIsAuth(!!res.accessToken);
+              setUser(!!res.accessToken ? res : {});
             } catch (error) {
               console.error(error);
             }

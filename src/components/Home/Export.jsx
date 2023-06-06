@@ -12,7 +12,7 @@ function ExportData() {
 
     // Download the data as an excel file or a PDF file
     const handleExportClick = () => {
-        exportOpportunities(selectedYear, selectedFormat, user.userId, user.token)
+        exportOpportunities(selectedYear, selectedFormat, user.userId, user.accessToken)
             .catch((err) => {
                 console.log(err);
             });
@@ -24,6 +24,7 @@ function ExportData() {
         >
         <Form.Select
             value={selectedYear}
+            id='export-year'
             onChange={(e) => setSelectedYear(e.target.value)}
         >
             <option value="">Select a year</option>
@@ -33,6 +34,7 @@ function ExportData() {
         </Form.Select>
         <Form.Select 
             value={selectedFormat} 
+            id='export-format'
             onChange={(e) => setSelectedFormat(e.target.value)}
         >
             <option value="">Select a format</option>

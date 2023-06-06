@@ -43,7 +43,7 @@ const Table = () => {
           setIsLoaded(true);
         } else {
           if(isAuth){
-            getAllOpportunities(user.token)
+            getAllOpportunities(user.accessToken)
               .then(data => {
 
                 if(data.status === 200){
@@ -71,7 +71,7 @@ const Table = () => {
               })
           }
         }
-    }, [isAuth, navigate, user.token, setUser, setIsAuth])
+    }, [isAuth, navigate, user.accessToken, setUser, setIsAuth])
 
     let columns = [];
 

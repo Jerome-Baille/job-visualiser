@@ -1,7 +1,7 @@
 import { getAllOpportunities, getOneOpportunity, postOpportunity, putOpportunity, deleteOpportunity } from './opportunityService';
 
 describe('CRUD tests', () => {
-  const token = 'some-auth-token';
+  const accessToken = 'some-auth-token';
 
   // Mock the fetch API so that we can control the responses in our tests
   const mockFetch = jest.fn();
@@ -17,12 +17,12 @@ describe('CRUD tests', () => {
     const response = { status: 200, body: opportunities };
     mockFetch.mockResolvedValueOnce({ json: jest.fn().mockResolvedValueOnce(response.body), status: response.status });
 
-    const result = await getAllOpportunities(token);
+    const result = await getAllOpportunities(accessToken);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('localhost'), {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json', 'Content-Type': 'application/json' },
         withCredentials: true,
     });
     expect(result).toEqual(response);
@@ -34,12 +34,12 @@ describe('CRUD tests', () => {
     const response = { status: 200, body: opportunity };
     mockFetch.mockResolvedValueOnce({ json: jest.fn().mockResolvedValueOnce(response.body), status: response.status });
 
-    const result = await getOneOpportunity(token, id);
+    const result = await getOneOpportunity(accessToken, id);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(id), {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json', 'Content-Type': 'application/json' },
       withCredentials: true,
     });
     expect(result).toEqual(response);
@@ -50,12 +50,12 @@ describe('CRUD tests', () => {
     const response = { status: 201, body: { ...opportunity, id: 'some-generated-id' } };
     mockFetch.mockResolvedValueOnce({ json: jest.fn().mockResolvedValueOnce(response.body), status: response.status });
 
-    const result = await postOpportunity(token, opportunity);
+    const result = await postOpportunity(accessToken, opportunity);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('new'), {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json', 'Content-Type': 'application/json' },
       withCredentials: true,
       body: JSON.stringify(opportunity),
     });
@@ -68,12 +68,12 @@ describe('CRUD tests', () => {
     const response = { status: 200, body: opportunity };
     mockFetch.mockResolvedValueOnce({ json: jest.fn().mockResolvedValueOnce(response.body), status: response.status });
 
-    const result = await putOpportunity(token, opportunity);
+    const result = await putOpportunity(accessToken, opportunity);
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(_id), {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json', 'Content-Type': 'application/json' },
       withCredentials: true,
       body: JSON.stringify(opportunity),
     });
@@ -85,12 +85,12 @@ describe('CRUD tests', () => {
         const response = { status: 204 };
         mockFetch.mockResolvedValueOnce({ json: jest.fn().mockResolvedValueOnce(response.body), status: response.status });
 
-        const result = await deleteOpportunity(token, id);
+        const result = await deleteOpportunity(accessToken, id);
 
         expect(mockFetch).toHaveBeenCalledTimes(1);
         expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(id), {
             method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'Content-Type': 'application/json' },
+            headers: { Authorization: `Bearer ${accessToken}`, Accept: 'application/json', 'Content-Type': 'application/json' },
             withCredentials: true,
         });
         expect(result).toEqual(response);

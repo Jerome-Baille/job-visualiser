@@ -24,33 +24,50 @@ const PrivateRoutes = () => {
   // State to track if component is loading
   const [isLoading, setIsLoading] = useState(true);
 
-  /**
-   * Effect hook to check token validity and authentication status
-   */
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      try {
-        const { token, expires } = await getTokenAndUserId();
-        if (!token || new Date(expires) < new Date()) {
-          setIsAuthenticated(false);
+/**
+ * Effect hook to check token validity and authentication status
+ */
+useEffect(() => {
+  const checkAuthentication = async () => {
+    try {
+      const { accessToken, refreshToken, expirationDate } = await getTokenAndUserId();
+      if (!accessToken || new Date(expirationDate) < new Date()) {
+        // Access token is expired, try to get a new one using the refresh token
+        const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${refreshToken}`
+          }
+        });
+        if (response.status === 200) {
+          const { accessToken: newAccessToken, accessTokenExpiresIn: newExpirationDate } = await response.json();
+          setIsAuthenticated(true);
+
+          console.log(newAccessToken, newExpirationDate)
+          const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
+
+          document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
         } else {
-          const response = await fetch(`${API_BASE_URL}/auth/check`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          setIsAuthenticated(response.status === 200);
+          setIsAuthenticated(false);
         }
-      } catch (error) {
-        console.log(error);
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
+      } else {
+        const response = await fetch(`${API_BASE_URL}/auth/check`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        setIsAuthenticated(response.status === 200);
       }
-    };
-    checkAuthentication();
-  }, []);
+    } catch (error) {
+      console.log(error);
+      setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  checkAuthentication();
+}, []);
 
   return (
     isLoading

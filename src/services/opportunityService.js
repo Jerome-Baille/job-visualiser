@@ -21,11 +21,11 @@ const options = {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-async function request(url, token, method, data) {
+async function request(url, accessToken, method, data) {
   const requestOptions = {
     method,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
       ...headers,
     },
     ...options,
@@ -54,8 +54,8 @@ async function request(url, token, method, data) {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-export async function getAllOpportunities(token) {
-  return request(API_BASE_URL, token, "GET");
+export async function getAllOpportunities(accessToken) {
+  return request(API_BASE_URL, accessToken, "GET");
 }
 
 
@@ -67,8 +67,8 @@ export async function getAllOpportunities(token) {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-export async function getOneOpportunity(token, id) {
-  return request(`${API_BASE_URL}/job/${id}`, token, "GET");
+export async function getOneOpportunity(accessToken, id) {
+  return request(`${API_BASE_URL}/job/${id}`, accessToken, "GET");
 }
 
 /**
@@ -78,8 +78,8 @@ export async function getOneOpportunity(token, id) {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-export async function postOpportunity(token, opportunity) {
-  return request(`${API_BASE_URL}/new`, token, "POST", opportunity);
+export async function postOpportunity(accessToken, opportunity) {
+  return request(`${API_BASE_URL}/new`, accessToken, "POST", opportunity);
 }
 
 /**
@@ -89,8 +89,8 @@ export async function postOpportunity(token, opportunity) {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-export async function putOpportunity(token, opportunity) {
-  return request(`${API_BASE_URL}/job/${opportunity._id}`, token, "PUT", opportunity);
+export async function putOpportunity(accessToken, opportunity) {
+  return request(`${API_BASE_URL}/job/${opportunity._id}`, accessToken, "PUT", opportunity);
 }
 
 /**
@@ -100,8 +100,8 @@ export async function putOpportunity(token, opportunity) {
  * @returns {Object} An object with the HTTP response status code and response body.
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  */
-export async function deleteOpportunity(token, id) {
-  return request(`${API_BASE_URL}/job/${id}`, token, "DELETE");
+export async function deleteOpportunity(accessToken, id) {
+  return request(`${API_BASE_URL}/job/${id}`, accessToken, "DELETE");
 }
 
 
@@ -115,12 +115,12 @@ export async function deleteOpportunity(token, id) {
  * @returns {void}
  * @throws {Error} If there is an error with the HTTP request.
  */
-export async function exportOpportunities(selectedYear, selectedFormat, userId, token) {
+export async function exportOpportunities(selectedYear, selectedFormat, userId, accessToken) {
     const url = `${API_BASE_URL}/${selectedFormat}/export/${userId}/${selectedYear}`;
     const requestOptions = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
             ...headers,
         },
         ...options,

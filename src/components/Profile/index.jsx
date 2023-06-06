@@ -30,11 +30,11 @@ export default function Profile() {
     });
 
     useEffect(() => {
-        if(!user.token) return;
-        getProfile(user.token)
+        if(!user.accessToken) return;
+        getProfile(user.accessToken)
             .then(res => setProfile(res.body))
             .catch(err => console.log(err));
-    }, [user.token]);
+    }, [user.accessToken]);
 
     const handleDelete = async (event) => {   
         event.preventDefault();

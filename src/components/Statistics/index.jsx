@@ -33,7 +33,7 @@ const Statistics = () => {
             addRow(jobs)
         } else {
             if(isAuth){
-                getAllOpportunities(user.token)
+                getAllOpportunities(user.accessToken)
                 .then(data => {
                     if(data.status === 200){
                         setJobs(data)
@@ -65,7 +65,7 @@ const Statistics = () => {
         }
 
         // eslint-disable-next-line
-    } , [isAuth, user.token])
+    } , [isAuth, user.accessToken])
 
     function countWeeks(){
         var today = new Date();

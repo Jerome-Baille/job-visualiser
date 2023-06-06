@@ -72,14 +72,14 @@ export async function login(user) {
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  * 
  */
-export async function getProfile(token) {
+export async function getProfile(accessToken) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${accessToken}`
       },
       withCredentials: true,
     });
@@ -104,14 +104,14 @@ export async function getProfile(token) {
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  * 
  */
-export async function updateUser(user, token) {
+export async function updateUser(user, accessToken) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/update/${user._id}`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${accessToken}`
       },
       withCredentials: true,
       body: JSON.stringify(user)
@@ -137,14 +137,14 @@ export async function updateUser(user, token) {
  * @throws {Error} If the HTTP response status code is not in the 200 range.
  * 
  */
-export async function deleteUser(user, token) {
+export async function deleteUser(user, accessToken) {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/delete/${user.username}`, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${accessToken}`
       },
       withCredentials: true,
       body: JSON.stringify(user)
@@ -169,15 +169,18 @@ export async function deleteUser(user, token) {
  * 
  */
 export async function getTokenAndUserId() {
-  const { token, userId } = Cookies.get();
-  return { token, userId };
+  const { accessToken, refreshToken, userId } = Cookies.get();
+  const accessTokenCookie = Cookies.get('accessToken');
+  const expirationDate = accessTokenCookie ? accessTokenCookie.expires : null;
+  return { accessToken, refreshToken, userId, expirationDate };
 }
 
 
 // clear cookie and local storage
 export async function logout() {
   // Remove all cookies
-  Cookies.remove('token');
+  Cookies.remove('accessToken');
+  Cookies.remove('refreshToken');
   Cookies.remove('userId');
 
   // Remove 'jobs' from local storage

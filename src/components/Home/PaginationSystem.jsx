@@ -40,12 +40,6 @@ const PaginationSystem = ({ nPages, currentPage, setCurrentPage }) => {
                 </Pagination.Item>
             ))}
 
-            {/* <Pagination.Item>{10}</Pagination.Item>
-            <Pagination.Item>{11}</Pagination.Item>
-            <Pagination.Item active>{12}</Pagination.Item>
-            <Pagination.Item>{13}</Pagination.Item>
-            <Pagination.Item disabled>{14}</Pagination.Item> */}
-
             {currentPage < (nPages) ? 
                 <>
                     {currentPage < (nPages-2) ? <Pagination.Ellipsis /> : null}
@@ -58,38 +52,6 @@ const PaginationSystem = ({ nPages, currentPage, setCurrentPage }) => {
                 : null
             }
         </Pagination>
-        // <nav>
-        //     <ul className='pagination justify-content-center'>
-        //         <li className="page-item">
-        //             <a className="page-link" 
-        //                 onClick={prevPage} 
-        //                 href='#'>
-                        
-        //                 Previous
-        //             </a>
-        //         </li>
-        //         {pageNumbers.map(pgNumber => (
-        //             <li key={pgNumber} 
-        //                 className= {`page-item ${currentPage === pgNumber ? 'active' : ''} `} >
-
-        //                 <a onClick={() => setCurrentPage(pgNumber)}  
-        //                     className='page-link' 
-        //                     href='#'>
-                            
-        //                     {pgNumber}
-        //                 </a>
-        //             </li>
-        //         ))}
-        //         <li className="page-item">
-        //             <a className="page-link" 
-        //                 onClick={nextPage}
-        //                 href='#'>
-                        
-        //                 Next
-        //             </a>
-        //         </li>
-        //     </ul>
-        // </nav>
     )
 }
 

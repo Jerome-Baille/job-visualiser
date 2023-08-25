@@ -43,7 +43,6 @@ useEffect(() => {
           const { accessToken: newAccessToken, accessTokenExpiresIn: newExpirationDate } = await response.json();
           setIsAuthenticated(true);
 
-          console.log(newAccessToken, newExpirationDate)
           const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
 
           document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;

@@ -4,6 +4,7 @@ import { AuthContext } from '../Layout';
 import { exportOpportunities } from '../../services/opportunityService';
 import { Button } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
+import { getTokenAndUserId } from '../../services/authService';
 
 function ExportData() {
     const { user } = useContext(AuthContext);
@@ -12,6 +13,13 @@ function ExportData() {
 
     // Download the data as an excel file or a PDF file
     const handleExportClick = () => {
+        if (!user.userId || !user.accessToken) {
+            let {accessToken, userId } = getTokenAndUserId();
+            exportOpportunities(selectedYear, selectedFormat, userId, accessToken)
+            .catch((err) => {
+                console.log(err);
+            });
+        };
         exportOpportunities(selectedYear, selectedFormat, user.userId, user.accessToken)
             .catch((err) => {
                 console.log(err);

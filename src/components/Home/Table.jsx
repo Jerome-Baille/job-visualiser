@@ -77,20 +77,20 @@ const Table = () => {
 
     if(windowSize.width > 768) {
       columns = [
-      { label: "Title", accessor: "name", sortable: true },
+      { label: "Job position", accessor: "name", sortable: true },
       { label: "Company", accessor: "company", sortable: true },
-      { label: "Location", accessor: "location", sortable: true },
-      { label: "Type of job", accessor: "type", sortable: false },
-      { label: "Job offer link or company website", accessor: "link", sortable: false },
-      { label: "Date of application", accessor: "applicationDate", sortable: true },
-      { label: "Final result of the application", accessor: "decision", sortable: false },
+      // { label: "Location", accessor: "location", sortable: true },
+      { label: "Type", accessor: "type", sortable: false },
+      // { label: "Job offer link or company website", accessor: "link", sortable: false },
+      { label: "Date", accessor: "applicationDate", sortable: true },
+      { label: "Decision", accessor: "decision", sortable: false },
       ];
     } else {
       columns = [
       { label: "Title", accessor: "name", sortable: true },
       { label: "Company", accessor: "company", sortable: true },
-      { label: "Type of job", accessor: "type", sortable: false },
-      { label: "Job offer link or company website", accessor: "link", sortable: false },
+      { label: "Type", accessor: "type", sortable: false },
+      { label: "Link", accessor: "link", sortable: false },
       ];
     }
 

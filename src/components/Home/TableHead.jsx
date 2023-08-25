@@ -35,9 +35,12 @@ const TableHead = ({ columns, handleSorting }) => {
                     >
                         <div className="th-content">
                             {label}
-                            <FontAwesomeIcon icon={faSortUp} id="sortUp" className={cl} />
-                            <FontAwesomeIcon icon={faSortDown} id="sortDown" className={cl} />
-                            <FontAwesomeIcon icon={faSort} id="sortDefault" className={cl} />
+
+                            <div className="sort-icon">
+                                <FontAwesomeIcon icon={faSortUp} id="sortUp" className={cl} />
+                                <FontAwesomeIcon icon={faSortDown} id="sortDown" className={cl} />
+                                <FontAwesomeIcon icon={faSort} id="sortDefault" className={cl} />
+                            </div>
                         </div>
                     </th>
                 )})}

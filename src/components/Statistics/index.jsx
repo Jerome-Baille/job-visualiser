@@ -1,234 +1,117 @@
-import React from 'react';
-import { useEffect, useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../Layout';
-import { Chart } from "react-google-charts";
-
-/* Bootstrap components */
-import Table from 'react-bootstrap/Table';
-
-/* Services */
-import { getAllOpportunities } from "../../services/opportunityService";
-
-/* Components import */
-import NotLogged from "../NotLogged";
-import LoadingSpinner from "../LoadingSpinner";
-import AccordionStats from './AccordionStats';
-import { logout } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+import { getAllOpportunities } from '../../services/opportunityService';
+import NotLogged from '../NotLogged';
+import LoadingSpinner from '../LoadingSpinner';
+import InProgressJobs from './InProgressJobs';
+import Notes from '../Notes';
+import { Card, Stack } from 'react-bootstrap';
+import ChartContainer from './ChartContainer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faCircleQuestion, faCircleXmark, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 
 const Statistics = () => {
-    const navigate = useNavigate()
-    const [jobs, setJobs] = useState([])
-    const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
+    const { isAuth, user } = useContext(AuthContext);
+    const [jobs, setJobs] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const [content, setContent] = useState([]);
-
     useEffect(() => {
-        if (localStorage.getItem("jobs")) {
-            var jobs = JSON.parse(localStorage.getItem("jobs"));
-            setJobs(jobs);
-            setIsLoaded(true);
-
-            addRow(jobs)
-        } else {
-            if(isAuth){
-                getAllOpportunities(user.accessToken)
-                .then(data => {
-                    if(data.status === 200){
-                        setJobs(data)
-
-                        addRow(data)
-                        setIsLoaded(true);
-
-                        // add response to the localStorage
-                        localStorage.setItem("jobs", JSON.stringify(data));
-                    }
-                    if(data.status === 401){
-                        logout().then(() => {
-                            setIsLoaded(true);            
-                            setIsAuth(false);
-                            setUser({})
-                    
-                            setTimeout(() => {
-                                navigate('/auth');
-                            }, 2500)
-                        })
-                    }
-                }).catch(err => {
-                    console.log(err)
-                })
-            } else {
-                setJobs([])
+        const fetchJobs = async () => {
+            try {
+                if (localStorage.getItem('jobs')) {
+                    setJobs(JSON.parse(localStorage.getItem('jobs')));
+                } else if (isAuth) {
+                    const { data } = await getAllOpportunities(user.accessToken);
+                    setJobs(data);
+                    localStorage.setItem('jobs', JSON.stringify(data));
+                } else {
+                    setJobs([]);
+                }
                 setIsLoaded(true);
+            } catch (error) {
+                console.log(error);
             }
-        }
+        };
 
-        // eslint-disable-next-line
-    } , [isAuth, user.accessToken])
+        fetchJobs();
+    }, [isAuth, user.accessToken]);
 
-    function countWeeks(){
-        var today = new Date();
-        var startingDate = new Date(2022, 4, 30)
-        var diff = Math.abs(today - startingDate);
-        var diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        var diffWeeks = Math.ceil(diffDays / 7);
-
-        return diffWeeks;
+    if (!isLoaded) {
+        return <LoadingSpinner />;
     }
 
-    function addRow(dataJobs) {    
-        const currentDate = new Date();          
-        // var startingDate = new Date(2022, 4, 30);
-        var startingDate = new Date(2022, 5, 1);
-        // var endingDate = new Date(startingDate.getTime() + 6 * 24 * 60 * 60 * 1000);
-        var result = [];
-        var filterArray = [];
-        var indexRow = 0
+    const positiveJobs = jobs.filter(job => job.decision === 'positive').length;
+    const inProgressJobs = jobs.filter(job => job.decision === 'in progress').length;
+    const unknownJobs = jobs.filter(job => job.decision === 'unknown' || job.decision === 'expired').length;
+    const negativeJobs = jobs.filter(job => job.decision === 'negative').length;
 
-        while(startingDate.getMonth() + 1 <= currentDate.getMonth() +1){
-            let month   = startingDate.getMonth() + 1;
-            let year    = startingDate.getFullYear();
-
-            // filter the jobs to only return the ones that correspond to month and year
-            filterArray = dataJobs.filter(job => {
-                var jobDate = new Date(job.applicationDate);
-                return jobDate.getMonth() + 1 === month && jobDate.getFullYear() === year;
-            })
-
-            var positive = filterArray.filter(job => {
-                return job.decision === "positive";
-            }).length;
-
-            var negative = filterArray.filter(job => {
-                return job.decision === "negative";
-            }).length;
-
-            var expired = filterArray.filter(job => {
-                return job.decision === "expired";
-            }).length;
-
-            var inProgress = filterArray.filter(job => {
-                return job.decision === "in progress";
-            }).length;
-
-            var unknown = filterArray.filter(job => {
-                return job.decision === "unknown";
-            }).length;
-
-            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-            var addedRow = {
-                "index": indexRow,
-                "month": month,
-                "monthName": months[month-1],
-                "year": year,
-                "total": filterArray.length,
-                "positive": positive,
-                "negative": negative,
-                "expired": expired,
-                "inProgress": inProgress,
-                "unknown": unknown
-            }
-
-            // add the row to the result array
-            result.push(addedRow)
-
-            // add a month to the starting date
-            startingDate.setMonth(startingDate.getMonth() + 1);
-        }
-
-        setContent(result);
-    }
-
-    if(isLoaded){
-        return(
-            <div className="main-container">
-                {isAuth ? 
-                <>
-                    <h1>Statistics</h1>
-
-                    <p>
-                        You have been looking for a job for <strong>{countWeeks()} weeks.</strong><br/>
-                        So far, you have applied for <strong>{jobs.length} jobs.</strong> (around {Math.round(jobs.length/countWeeks())} per week)<br/>
-                    </p>
-
-                    <Chart
-                        chartType="PieChart"
-                        data={[
-                            ["Task", "Hours per Day"],
-                            [`Positive (${jobs.filter(job => job.decision === 'positive').length})`, jobs.filter(job => job.decision === "positive").length],
-                            [`Negative (${jobs.filter(job => job.decision === "negative").length})`, jobs.filter(job => job.decision === "negative").length],
-                            [`Expired (${jobs.filter(job => job.decision === "expired").length})`, jobs.filter(job => job.decision === "expired").length],
-                            [`In Progress (${jobs.filter(job => job.decision === "in progress").length})`, jobs.filter(job => job.decision === "in progress").length],
-                            [`Unknown (${jobs.filter(job => job.decision === "unknown").length})`, jobs.filter(job => job.decision === "unknown").length],
-                            ]}
-                        options={{
-                            title: `My Job Applications (${jobs.length})`,
-                            colors: ['#42b883', '#a6120d', '#878681', '#264de4', '#CBC3E3']
-                            }}
-                        width={"100%"}
-                        height={"500px"}
-                    />
-
-                <Table striped bordered hover size="sm" className="table-stats">
-                    <thead>
-                        <tr>
-                            <th className="bg-positive">
-                                Positive <br/>{jobs.filter(job => job.decision === "positive").length}
-                            </th>
-                            <th className="bg-negative">
-                                Negative <br/> {jobs.filter(job => job.decision === "negative").length}
-                            </th>
-                            <th className="bg-expired">
-                                Expired <br/> {jobs.filter(job => job.decision === "expired").length}
-                            </th>
-                            <th className="bg-in-progress">
-                                In progress <br/> {jobs.filter(job => job.decision === "in progress").length}
-                            </th>
-                            <th>
-                                Unknown <br/> {jobs.filter(job => job.decision === "unknown").length}
-                            </th>
-                        </tr>
-                    </thead>
-                    
-                        {content.length!==0 ? content.map((row, index) => (
-                            <tbody key={`row-${index}`}>
-                                <tr>
-                                    <td colSpan="5">
-                                        <AccordionStats row={row} jobs={jobs} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="bg-positive">
-                                        {row.positive}
-                                    </td>
-                                    <td className="bg-negative">
-                                        {row.negative}
-                                    </td>
-                                    <td className="bg-expired">
-                                        {row.expired}
-                                    </td>
-                                    <td className="bg-in-progress">
-                                        {row.inProgress}
-                                    </td>
-                                    <td>
-                                        {row.unknown}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        )) : null }
-                    
-                </Table>
-                </>
-                : <NotLogged/>}
-            </div> 
-        )
-    } else {
-        return (
-            <LoadingSpinner />
-        )
-    }
-}
+    return (
+        <div className="background-container">
+            <main className="main-container">
+                {isAuth ? (
+                    <Stack gap={3}>
+                        <div className="row">
+                            <div className="col-sm-12 col-md-3">
+                                <Card className="h-100">
+                                    <Card.Body className='d-flex justify-content-between align-items-center positive-content'>
+                                        <FontAwesomeIcon icon={faCircleCheck} size="xl" />
+                                        <div className='row d-flex justify-content-center text-center'>
+                                            <Card.Title>Positive</Card.Title>
+                                            <Card.Text>{positiveJobs}</Card.Text>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                            <div className="col-sm-12 col-md-3">
+                                <Card className="h-100">
+                                    <Card.Body className='d-flex justify-content-between align-items-center in-progress-content'>
+                                        <FontAwesomeIcon icon={faHourglassHalf} size="xl" />
+                                        <div className='row d-flex justify-content-center text-center'>
+                                            <Card.Title>In Progress</Card.Title>
+                                            <Card.Text>{inProgressJobs}</Card.Text>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                            <div className="col-sm-12 col-md-3">
+                                <Card className="h-100">
+                                    <Card.Body className='d-flex justify-content-between align-items-center'>
+                                        <FontAwesomeIcon icon={faCircleQuestion} size="xl" />
+                                        <div className='row d-flex justify-content-center text-center'>
+                                            <Card.Title>Unknown</Card.Title>
+                                            <Card.Text>{unknownJobs}</Card.Text>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                            <div className="col-sm-12 col-md-3">
+                                <Card className="h-100">
+                                    <Card.Body className='d-flex justify-content-between align-items-center negative-content'>
+                                        <FontAwesomeIcon icon={faCircleXmark} size="xl" />
+                                        <div className='row d-flex justify-content-center text-center'>
+                                            <Card.Title>Negative</Card.Title>
+                                            <Card.Text>{negativeJobs}</Card.Text>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        </div>
+                        <ChartContainer jobs={jobs} isLoaded={isLoaded} />
+                        <div className="row">
+                            <div className="col-sm-12 col-lg-4">
+                                <Notes/>
+                            </div>
+                            <div className="col-sm-12 col-lg-8">
+                                <InProgressJobs jobs={jobs} />
+                            </div>
+                        </div>
+                    </Stack>
+                ) : (
+                    <NotLogged />
+                )}
+            </main>
+        </div>
+    );
+};
 
 export default Statistics;

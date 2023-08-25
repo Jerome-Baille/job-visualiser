@@ -138,6 +138,8 @@ export async function updateUser(user, accessToken) {
  * 
  */
 export async function deleteUser(user, accessToken) {
+  console.log(user);
+  console.log(accessToken);
   try {
     const response = await fetch(`${API_BASE_URL}/auth/delete/${user.username}`, {
       method: 'DELETE',
@@ -169,10 +171,10 @@ export async function deleteUser(user, accessToken) {
  * 
  */
 export async function getTokenAndUserId() {
-  const { accessToken, refreshToken, userId } = Cookies.get();
+  const { accessToken, refreshToken } = Cookies.get();
   const accessTokenCookie = Cookies.get('accessToken');
   const expirationDate = accessTokenCookie ? accessTokenCookie.expires : null;
-  return { accessToken, refreshToken, userId, expirationDate };
+  return { accessToken, refreshToken, expirationDate };
 }
 
 

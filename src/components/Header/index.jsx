@@ -10,7 +10,7 @@ import { Nav, Navbar } from 'react-bootstrap';
 
 /* FontAwesome imports */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCirclePlus, faRightFromBracket, faRightToBracket, faUser, faHandshake, faChartLine, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCirclePlus, faList, faRightFromBracket, faRightToBracket, faUser, faHandshake, faChartLine, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header() {
     const { isAuth } = useContext(AuthContext);
@@ -42,6 +42,30 @@ export default function Header() {
                                     <Nav.Link
                                         eventKey={1}
                                         as={NavLink}
+                                        to="/dashboard"
+                                        exact="true"
+                                        className="d-md-none"
+                                        aria-label="Get all the statistics from your job applications through the dashboard."
+                                    >
+                                        <FontAwesomeIcon icon={faChartLine} />
+                                        Dashboard
+                                    </Nav.Link>
+
+                                    <Nav.Link
+                                        eventKey={2}
+                                        as={NavLink}
+                                        to="/list"
+                                        exact="true"
+                                        className="d-md-none"
+                                        aria-label="Navigate to the home page. See all your job applications."
+                                    >
+                                        <FontAwesomeIcon icon={faList} />
+                                        <span>List of applications</span>
+                                    </Nav.Link>
+
+                                    <Nav.Link
+                                        eventKey={2}
+                                        as={NavLink}
                                         to="/create"
                                         exact="true"
                                         className="d-md-none"
@@ -50,17 +74,7 @@ export default function Header() {
                                         <FontAwesomeIcon icon={faCirclePlus} />
                                         <span>Add a job application</span>
                                     </Nav.Link>
-                                    <Nav.Link
-                                        eventKey={2}
-                                        as={NavLink}
-                                        to="/stats"
-                                        exact="true"
-                                        className="d-md-none"
-                                        aria-label="Get all the statistics from your job applications"
-                                    >
-                                        <FontAwesomeIcon icon={faChartLine} />
-                                        Statistics
-                                    </Nav.Link>
+
                                     <Nav.Link
                                         eventKey={3}
                                         as={NavLink}
@@ -72,16 +86,18 @@ export default function Header() {
                                         <FontAwesomeIcon icon={faHandshake} />
                                         Job Boards
                                     </Nav.Link>
+
                                     <Nav.Link
                                         eventKey={4}
                                         as={NavLink}
-                                        to="/how-to"
+                                        to="/how-to-use"
                                         exact="true"
                                         aria-label="Learn how to use the app."
                                     >
                                         <FontAwesomeIcon icon={faCircleQuestion} />
                                         How does it work?
                                     </Nav.Link>
+
                                     <Nav.Link
                                         eventKey={5}
                                         as={NavLink}

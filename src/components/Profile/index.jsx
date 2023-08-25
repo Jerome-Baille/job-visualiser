@@ -4,7 +4,7 @@ import { AuthContext } from '../Layout';
 import { useToast } from '../../contexts/ToastContext';
 
 /* Bootstrap components */
-import { Button, Form, InputGroup, Modal, Stack } from "react-bootstrap";
+import { Button, Card, Form, InputGroup, Modal, Stack } from "react-bootstrap";
 
 /* FontAwesome imports */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,7 +35,7 @@ export default function Profile() {
         handleClose();
 
         const res = await deleteUser(profile, user.accessToken);
-        if(res.status === 200) {
+        if (res.status === 200) {
             showToast('delete', 'Your profile has been annihilated from the database !')
         } else {
             showToast('error', 'Something went wrong, please try again !')
@@ -121,115 +121,119 @@ export default function Profile() {
     return (
         <div className="background-container">
             <div className="main-container">
-                <Stack
-                    gap={5} className="col-10 col-lg-5 mx-auto"
-                    onSubmit={handleSubmit}
-                    as={Form}
-                >
-                    <div>
-                        <Form.Group
-                            controlId="formUsername"
-                            className="mb-3"
+                <Card>
+                    <Card.Body>
+                        <Stack
+                            gap={5} className="col-10 col-lg-5 mx-auto"
+                            onSubmit={handleSubmit}
+                            as={Form}
                         >
-                            <Form.Label>Username</Form.Label>
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter username"
-                                    name="username"
-                                    value={profile.username}
-                                    onChange={handleInputChange}
-                                />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group
-                            controlId="formPassword"
-                            className="mb-3"
-                        >
-                            <Form.Label>Password</Form.Label>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    type={isPasswordVisible ? 'text' : 'password'}
-                                    placeholder="Enter password"
-                                    name="password"
-                                    onChange={handleInputChange}
-                                />
-                                <Button
-                                    id="button-password"
-                                    className="btn-password"
-                                    onClick={() => handlePasswordVisibility('formPassword')}
+                            <div>
+                                <Form.Group
+                                    controlId="formUsername"
+                                    className="mb-3"
                                 >
-                                    <FontAwesomeIcon icon={isPasswordVisible ? faEye : faEyeSlash} />
-                                </Button>
-                            </InputGroup>
-                            <Form.Text className="text-muted">
-                                Must be minimum <span id="password-length">8 characters long</span> and includes at least <span id="password-number">one number</span>, <span id="password-lowercase">one lowercase</span>, <span id="password-uppercase">one uppercase</span> letter and a <span id="password-special">special character</span>.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group controlId="formConfirmPassword" className="mb-3">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    type={isPasswordVisible ? 'text' : 'password'}
-                                    placeholder="Confirm password"
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={(e) => {
-                                        setTouched(true);
-                                        setConfirmPassword(e.target.value);
-                                    }}
-                                />
-                                <Button
-                                    id="button-confirmPassword"
-                                    className="btn-password"
-                                    onClick={() => handlePasswordVisibility('formConfirmPassword')}
+                                    <Form.Label>Username</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter username"
+                                            name="username"
+                                            value={profile.username}
+                                            onChange={handleInputChange}
+                                        />
+                                    </InputGroup>
+                                </Form.Group>
+                                <Form.Group
+                                    controlId="formPassword"
+                                    className="mb-3"
                                 >
-                                    <FontAwesomeIcon icon={isPasswordVisible ? faEye : faEyeSlash} />
+                                    <Form.Label>Password</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <Form.Control
+                                            type={isPasswordVisible ? 'text' : 'password'}
+                                            placeholder="Enter password"
+                                            name="password"
+                                            onChange={handleInputChange}
+                                        />
+                                        <Button
+                                            id="button-password"
+                                            className="btn-password"
+                                            onClick={() => handlePasswordVisibility('formPassword')}
+                                        >
+                                            <FontAwesomeIcon icon={isPasswordVisible ? faEye : faEyeSlash} />
+                                        </Button>
+                                    </InputGroup>
+                                    <Form.Text className="text-muted">
+                                        Must be minimum <span id="password-length">8 characters long</span> and includes at least <span id="password-number">one number</span>, <span id="password-lowercase">one lowercase</span>, <span id="password-uppercase">one uppercase</span> letter and a <span id="password-special">special character</span>.
+                                    </Form.Text>
+                                </Form.Group>
+                                <Form.Group controlId="formConfirmPassword" className="mb-3">
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <Form.Control
+                                            type={isPasswordVisible ? 'text' : 'password'}
+                                            placeholder="Confirm password"
+                                            name="confirmPassword"
+                                            value={confirmPassword}
+                                            onChange={(e) => {
+                                                setTouched(true);
+                                                setConfirmPassword(e.target.value);
+                                            }}
+                                        />
+                                        <Button
+                                            id="button-confirmPassword"
+                                            className="btn-password"
+                                            onClick={() => handlePasswordVisibility('formConfirmPassword')}
+                                        >
+                                            <FontAwesomeIcon icon={isPasswordVisible ? faEye : faEyeSlash} />
+                                        </Button>
+                                    </InputGroup>
+                                    {confirmPassword !== profile.password && touched && (
+                                        <Form.Text className="text-danger">
+                                            Passwords do not match.
+                                        </Form.Text>
+                                    )}
+                                </Form.Group>
+                            </div>
+
+                            <div
+                                className="d-flex justify-content-between"
+                            >
+                                <Button
+                                    className="btn-delete"
+                                    onClick={handleShow}
+                                >
+                                    Delete Account
                                 </Button>
-                            </InputGroup>
-                            {confirmPassword !== profile.password && touched && (
-                                <Form.Text className="text-danger">
-                                    Passwords do not match.
-                                </Form.Text>
-                            )}
-                        </Form.Group>
-                    </div>
 
-                    <div
-                        className="d-flex justify-content-between"
-                    >
-                        <Button
-                            className="btn-delete"
-                            onClick={handleShow}
-                        >
-                            Delete Account
-                        </Button>
+                                <Button
+                                    className="btn-update"
+                                    type="submit"
+                                    disabled={!touched} // disable button if inputs are untouched
+                                >
+                                    Update
+                                </Button>
+                            </div>
 
-                        <Button
-                            className="btn-update"
-                            type="submit"
-                            disabled={!touched} // disable button if inputs are untouched
-                        >
-                            Update
-                        </Button>
-                    </div>
-
-                    <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Annihilation !</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>Are you sure you want to delete your account ?</Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Close
-                            </Button>
-                            <Button variant="danger" onClick={handleDelete}>
-                                Confirm
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </Stack>
+                            <Modal show={show} onHide={handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Annihilation !</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Are you sure you want to delete your account ?</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose}>
+                                        Close
+                                    </Button>
+                                    <Button variant="danger" onClick={handleDelete}>
+                                        Confirm
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </Stack>
+                    </Card.Body>
+                </Card>
             </div>
         </div>
     );

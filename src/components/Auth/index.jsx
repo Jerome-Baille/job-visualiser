@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Layout';
 
 /* Bootstrap elements */
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 
 /* Services */
 import { login, logout, register } from '../../services/authService';
@@ -120,106 +120,110 @@ export default function Auth() {
   if (isLoaded) {
     return (
       <div className="background-container">
-        <div className="main-container">         
-          <div className="connexion-container">
-            {isAuth ?
-              <section id="logout-form">
-                <h1>Logout</h1>
-                <p>Are you sure you want to log out ?</p>
+        <main className="main-container">
+          <Card>
+            <Card.Body>
+              <div className="connexion-container">
+                {isAuth ?
+                  <section id="logout-form">
+                    <h1>Logout</h1>
+                    <p>Are you sure you want to log out ?</p>
 
-                <Button variant="danger" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </section>
-              : (registered ?
-                <section id="login-form" className="form-container">
-                  <h1>Login</h1>
-                  <Form onSubmit={handleLogin} validated>
-                    <Form.Group className="mb-3" controlId="formUsername">
-                      <Form.Label>
-                        Username
-                      </Form.Label>
-                      <Form.Control
-                        required
-                        type="text"
-                        placeholder="Enter username"
-                        name="username"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formPassword">
-                      <Form.Label>
-                        Password
-                      </Form.Label>
-                      <Form.Control
-                        required
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="btn-connexion"
-                    >
-                      Login
+                    <Button variant="danger" onClick={handleLogout}>
+                      Logout
                     </Button>
-                  </Form>
+                  </section>
+                  : (registered ?
+                    <section id="login-form" className="form-container">
+                      <h1>Login</h1>
+                      <Form onSubmit={handleLogin} validated>
+                        <Form.Group className="mb-3" controlId="formUsername">
+                          <Form.Label>
+                            Username
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            type="text"
+                            placeholder="Enter username"
+                            name="username"
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
 
-                  <div className='alt-connexion'>
-                    <span>Not registered? </span>
-                    <button onClick={toggleLoginRegister} className='alt-link'>
-                      Create an account
-                    </button>
-                  </div>
-                </section>
-                :
-                <section id="register-form" className="form-container">
-                  <h1>Register</h1>
-                  <Form onSubmit={handleRegister}>
-                    <Form.Group className="mb-3" controlId="formUsername">
-                      <Form.Label>Username</Form.Label>
-                      <Form.Control
-                        required
-                        type="text"
-                        placeholder="Enter username"
-                        name="username"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+                        <Form.Group className="mb-3" controlId="formPassword">
+                          <Form.Label>
+                            Password
+                          </Form.Label>
+                          <Form.Control
+                            required
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="btn-connexion"
+                        >
+                          Login
+                        </Button>
+                      </Form>
 
-                    <Form.Group className="mb-3" controlId="formPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        required
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="btn-connexion"
-                    >
-                      Submit
-                    </Button>
-                  </Form>
+                      <div className='alt-connexion'>
+                        <span>Not registered? </span>
+                        <button onClick={toggleLoginRegister} className='alt-link'>
+                          Create an account
+                        </button>
+                      </div>
+                    </section>
+                    :
+                    <section id="register-form" className="form-container">
+                      <h1>Register</h1>
+                      <Form onSubmit={handleRegister}>
+                        <Form.Group className="mb-3" controlId="formUsername">
+                          <Form.Label>Username</Form.Label>
+                          <Form.Control
+                            required
+                            type="text"
+                            placeholder="Enter username"
+                            name="username"
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
 
-                  <div className='alt-connexion'>
-                    <span>Already registered? </span>
-                    <button onClick={toggleLoginRegister} className='alt-link'>
-                      Log in
-                    </button>
-                  </div>
-                </section>
-              )}
-          </div>
-        </div>
+                        <Form.Group className="mb-3" controlId="formPassword">
+                          <Form.Label>Password</Form.Label>
+                          <Form.Control
+                            required
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="btn-connexion"
+                        >
+                          Submit
+                        </Button>
+                      </Form>
+
+                      <div className='alt-connexion'>
+                        <span>Already registered? </span>
+                        <button onClick={toggleLoginRegister} className='alt-link'>
+                          Log in
+                        </button>
+                      </div>
+                    </section>
+                  )}
+              </div>
+            </Card.Body>
+          </Card>
+        </main>
       </div>
     );
   } else {

@@ -408,7 +408,6 @@ th .down {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 50px;
 
   .btn-connexion {
     width: 100%;
@@ -822,4 +821,8 @@ input {
   background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
   backdrop-filter: blur(1px); /* Apply a blur effect to the background */
   z-index: 999; /* Ensure the overlay is above other content */
+}
+
+td:hover {
+  cursor: pointer;
 }

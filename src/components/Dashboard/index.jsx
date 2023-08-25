@@ -10,7 +10,7 @@ import ChartContainer from './ChartContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleQuestion, faCircleXmark, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 
-const Statistics = () => {
+const Dashboard = () => {
     const { isAuth, user } = useContext(AuthContext);
     const [jobs, setJobs] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -98,7 +98,7 @@ const Statistics = () => {
                         </div>
                         <ChartContainer jobs={jobs} isLoaded={isLoaded} />
                         <div className="row">
-                            <div className="col-sm-12 col-lg-4">
+                            <div className="col-sm-12 col-lg-4 mb-4">
                                 <Notes/>
                             </div>
                             <div className="col-sm-12 col-lg-8">
@@ -114,4 +114,4 @@ const Statistics = () => {
     );
 };
 
-export default Statistics;
+export default Dashboard;

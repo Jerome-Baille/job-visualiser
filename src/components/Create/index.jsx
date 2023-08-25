@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Stack } from "react-bootstrap";
+import { Button, Card, Form, Stack } from "react-bootstrap";
 import { postOpportunity } from "../../services/opportunityService";
 import { getTokenAndUserId } from "../../services/authService";
 import { useToast } from '../../contexts/ToastContext';
@@ -67,120 +67,124 @@ export default function Create() {
 
   return (
     <div className="background-container">
-      <div data-testid="create-element" className="main-container">
-        <Stack
-          className="col-10 col-lg-5 mx-auto"
-          gap={3}
-          onSubmit={handleSubmit}
-          as={Form}
-        >
-          <Form.Group className="mb-3" controlId="formName">
-            <Form.Label>Title : (required)</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="name"
-              placeholder="Title"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formCompany">
-            <Form.Label>Company : (required)</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="company"
-              placeholder="Company"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formLocation">
-            <Form.Label>Location : (required)</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="location"
-              placeholder="Location"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formType">
-            <Form.Label>Type of job : (required)</Form.Label>
-            <Form.Select
-              required
-              name="type"
-              placeholder="Type of job"
-              value={contactInfo.type}
-              onChange={handleChange}
+      <main className="main-container">
+        <Card data-testid="create-element" className="main-container">
+          <Card.Body>
+            <Stack
+              className="col-10 col-lg-5 mx-auto"
+              gap={3}
+              onSubmit={handleSubmit}
+              as={Form}
             >
-              {type.map((type, index) => {
-                return (<option key={index} value={type}>{type}</option>)
-              })}
-            </Form.Select>
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formLink">
-            <Form.Label>Job offer link or company website : (required)</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              name="link"
-              placeholder="Job offer link or company website"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formDate">
-            <Form.Label>Date of application : (required)</Form.Label>
-            <Form.Control
-              required
-              type="date"
-              name="applicationDate"
-              placeholder="Date of application"
-              value={contactInfo.applicationDate}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formInterviewDate">
-            <Form.Label>Date of interviews : </Form.Label>
-            <Form.Control
-              type="text"
-              name="interviewDate"
-              placeholder="Date of interviews "
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formDecisionDate">
-            <Form.Label>Acceptance / Refusal : </Form.Label>
-            <Form.Control
-              type="text"
-              name="decisionDate"
-              placeholder="Acceptance / Refusal"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formDecision">
-            <Form.Label>Final result of the application : </Form.Label>
-            <Form.Select
-              aria-label="Final decision on the application"
-              name="decision"
-              placeholder="Final result of the application"
-              value={contactInfo.decision}
-              onChange={handleChange}
-            >
-              {decision.map((decision, index) => {
-                return (<option key={index} value={decision}>{decision === 'unknown' ? "——" : decision}</option>)
-              })}
-            </Form.Select>
-          </Form.Group>
-          <Button
-            variant="primary"
-            type="submit"
-            className="btn-create"
-            disabled={!isValid}
-          >
-            Submit
-          </Button>
-        </Stack>
-      </div>
+              <Form.Group className="mb-3" controlId="formName">
+                <Form.Label>Title : (required)</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="name"
+                  placeholder="Title"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formCompany">
+                <Form.Label>Company : (required)</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="company"
+                  placeholder="Company"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formLocation">
+                <Form.Label>Location : (required)</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="location"
+                  placeholder="Location"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formType">
+                <Form.Label>Type of job : (required)</Form.Label>
+                <Form.Select
+                  required
+                  name="type"
+                  placeholder="Type of job"
+                  value={contactInfo.type}
+                  onChange={handleChange}
+                >
+                  {type.map((type, index) => {
+                    return (<option key={index} value={type}>{type}</option>)
+                  })}
+                </Form.Select>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formLink">
+                <Form.Label>Job offer link or company website : (required)</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="link"
+                  placeholder="Job offer link or company website"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formDate">
+                <Form.Label>Date of application : (required)</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="applicationDate"
+                  placeholder="Date of application"
+                  value={contactInfo.applicationDate}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formInterviewDate">
+                <Form.Label>Date of interviews : </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="interviewDate"
+                  placeholder="Date of interviews "
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formDecisionDate">
+                <Form.Label>Acceptance / Refusal : </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="decisionDate"
+                  placeholder="Acceptance / Refusal"
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formDecision">
+                <Form.Label>Final result of the application : </Form.Label>
+                <Form.Select
+                  aria-label="Final decision on the application"
+                  name="decision"
+                  placeholder="Final result of the application"
+                  value={contactInfo.decision}
+                  onChange={handleChange}
+                >
+                  {decision.map((decision, index) => {
+                    return (<option key={index} value={decision}>{decision === 'unknown' ? "——" : decision}</option>)
+                  })}
+                </Form.Select>
+              </Form.Group>
+              <Button
+                variant="primary"
+                type="submit"
+                className="btn-create"
+                disabled={!isValid}
+              >
+                Submit
+              </Button>
+            </Stack>
+          </Card.Body>
+        </Card>
+      </main>
     </div>
   );
 }

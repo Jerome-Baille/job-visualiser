@@ -6,10 +6,11 @@ import './App.scss';
 import Auth from './components/Auth';
 import Create from './components/Create';
 import Detail from './components/Home/Detail';
-import Statistics from './components/Statistics';
+import Dashboard from './components/Dashboard';
 import Page404 from './components/Page404';
 import JobBoards from './components/JobBoards';
 import Profile from './components/Profile';
+import HowToUse from './components/How-to-use';
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
         <Route element={<Layout />} path="/" exact>
           <Route index element={<Navigate to ="/dashboard" />} />
           <Route path="Create" element={<Create />} />
-          <Route path="Dashboard" element={<Statistics />} />
+          <Route path="Dashboard" element={<Dashboard />} />
           <Route path="List" element={<Home />} />
           <Route path="Job-boards" element={<JobBoards />} />
           <Route path="Profile" element={<Profile />} />
+          <Route path="How-to-use" element={<HowToUse />} />
           <Route path="/job/:id" element={<Detail />} />
           <Route path="*" element={<Page404 />} />
         </Route>

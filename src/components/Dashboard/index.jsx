@@ -21,15 +21,20 @@ const Dashboard = () => {
                 if (localStorage.getItem('jobs')) {
                     setJobs(JSON.parse(localStorage.getItem('jobs')));
                 } else if (isAuth) {
-                    const { data } = await getAllOpportunities(user.accessToken);
-                    setJobs(data);
-                    localStorage.setItem('jobs', JSON.stringify(data));
+                    getAllOpportunities(user.accessToken)
+                        .then(data => {
+                            if (data.status === 200) {
+                                setJobs(data.body);
+                                localStorage.setItem('jobs', JSON.stringify(data.body));
+                            }
+                        })
                 } else {
                     setJobs([]);
                 }
                 setIsLoaded(true);
             } catch (error) {
                 console.log(error);
+                setIsLoaded(true);
             }
         };
 

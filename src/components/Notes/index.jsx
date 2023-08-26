@@ -6,22 +6,20 @@ import { useToast } from '../../contexts/ToastContext';
 
 function JobSearchNotes() {
     const { user } = useContext(AuthContext);
-    const [profile, setProfile] = useState({
-        username: '',
-        password: '',
-        notes: ''
-    });
+    const [notes, setNotes] = useState('');
     const { showToast } = useToast();
 
     useEffect(() => {
         if (!user.accessToken) return;
         getProfile(user.accessToken)
-            .then(res => setProfile(res.body))
+            .then(res => setNotes(res.body.notes))
             .catch(err => console.log(err));
     }, [user.accessToken]);
 
     const handleSaveNotes = (e) => {
         e.preventDefault();
+
+        const profile = { notes };
 
         updateUser(profile, user.accessToken)
             .then(res => {
@@ -34,7 +32,7 @@ function JobSearchNotes() {
     };
 
     const handleInputChange = (e) => {
-        setProfile({ ...profile, [e.target.name]: e.target.value });
+        setNotes(e.target.value);
     }
 
     return (
@@ -47,7 +45,7 @@ function JobSearchNotes() {
                             as="textarea"
                             rows={5}
                             name='notes'
-                            value={profile.notes}
+                            value={notes}
                             onChange={handleInputChange}
                         />
                     </Form.Group>

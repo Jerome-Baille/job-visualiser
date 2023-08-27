@@ -55,7 +55,7 @@ const ChartContainer = ({ jobs, isLoaded }) => {
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     const previousMonday = new Date(today);
-    previousMonday.setDate(today.getDate() - today.getDay() + 1); // Go back to previous Monday
+    previousMonday.setDate(today.getDate() - today.getDay() + 1 - (today.getDay() === 0 ? 7 : 0));  // Go back to previous Monday
     const mondayOfSelectedWeek = new Date(previousMonday);
     mondayOfSelectedWeek.setDate(previousMonday.getDate() - selectedWeek * 7);
     const lastSevenDays = Array.from({ length: 7 }, (_, i) => {
@@ -72,6 +72,12 @@ const ChartContainer = ({ jobs, isLoaded }) => {
                 lastSevenDays.some(day => day.toDateString() === applicationDate.toDateString());
         }).length,
     }));
+
+    const weekLabels = [
+        `From ${lastSevenDays[0].getDate().toString().padStart(2, '0')}-${(lastSevenDays[0].getMonth() + 1).toString().padStart(2, '0')} to ${lastSevenDays[6].getDate().toString().padStart(2, '0')}-${(lastSevenDays[6].getMonth() + 1).toString().padStart(2, '0')}`,
+        `From ${new Date(lastSevenDays[0].setDate(lastSevenDays[0].getDate() - 7)).getDate().toString().padStart(2, '0')}-${(new Date(lastSevenDays[0].setDate(lastSevenDays[0].getDate() - 7)).getMonth() + 1).toString().padStart(2, '0')} to ${new Date(lastSevenDays[6].setDate(lastSevenDays[6].getDate() - 7)).getDate().toString().padStart(2, '0')}-${(new Date(lastSevenDays[6].setDate(lastSevenDays[6].getDate() - 7)).getMonth() + 1).toString().padStart(2, '0')}`,
+        `From ${new Date(lastSevenDays[0].setDate(lastSevenDays[0].getDate() - 14)).getDate().toString().padStart(2, '0')}-${(new Date(lastSevenDays[0].setDate(lastSevenDays[0].getDate() - 14)).getMonth() + 1).toString().padStart(2, '0')} to ${new Date(lastSevenDays[6].setDate(lastSevenDays[6].getDate() - 14)).getDate().toString().padStart(2, '0')}-${(new Date(lastSevenDays[6].setDate(lastSevenDays[6].getDate() - 14)).getMonth() + 1).toString().padStart(2, '0')}`
+    ];
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(entries => {
@@ -146,9 +152,9 @@ const ChartContainer = ({ jobs, isLoaded }) => {
                                     onChange={handleWeekChange}
                                     className="w-50 align-self-end"
                                 >
-                                    <option value={0}>This Week</option>
-                                    <option value={1}>Previous Week</option>
-                                    <option value={2}>Two Weeks Ago</option>
+                                    <option value={0}>{weekLabels[0]}</option>
+                                    <option value={1}>{weekLabels[1]}</option>
+                                    <option value={2}>{weekLabels[2]}</option>
                                     {/* Add more options if needed */}
                                 </Form.Select>
                             </Card.Footer>

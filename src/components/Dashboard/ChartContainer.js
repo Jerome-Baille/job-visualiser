@@ -112,7 +112,7 @@ const ChartContainer = ({ jobs, isLoaded }) => {
                             <Card.Header className='flex justify-content-center align-items-center'>
                                 <Card.Title>Applications per Month</Card.Title>
                             </Card.Header>
-                            <Card.Body ref={lineChartCardBodyRef} id='line-chart-container' className="chart-container">
+                            <Card.Body ref={lineChartCardBodyRef} id='line-chart-container' className="d-flex flex-grow-1 justify-content-center align-items-center">
                                 {lineChartDimension.width && lineChartDimension.height && (
                                     <LineChart
                                         data={monthlyApplicationData}
@@ -129,7 +129,7 @@ const ChartContainer = ({ jobs, isLoaded }) => {
                             <Card.Header className='flex justify-content-center align-items-center'>
                                 <Card.Title>Applications per Day.</Card.Title>
                             </Card.Header>
-                            <Card.Body ref={barChartCardBodyRef} id="bar-chart-container" className="chart-container">
+                            <Card.Body ref={barChartCardBodyRef} id="bar-chart-container" className="d-flex flex-grow-1 justify-content-center align-items-center ">
                                 {barChartDimension.width && barChartDimension.height && (
                                     <BarChart
                                         data={applicationsPerDay}

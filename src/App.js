@@ -3,7 +3,7 @@ import PrivateRoutes from './components/PrivateRoutes';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import './App.scss';
-import Auth from './components/Auth';
+import Auth from './components/Auth/Auth';
 import Create from './components/Create';
 import Detail from './components/Home/Detail';
 import Dashboard from './components/Dashboard';

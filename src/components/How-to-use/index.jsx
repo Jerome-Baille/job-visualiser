@@ -16,6 +16,8 @@ function HowToUse() {
               <p>Welcome to the app! Here's a step-by-step guide on how to make the most of its features:</p>
             </div>
 
+            <hr />
+
             <Card.Title className='d-flex align-items-baseline gap-3'>
               <FontAwesomeIcon icon={faTachographDigital} />
               <h3>Dashboard: Monitor Your Progress</h3>
@@ -26,6 +28,8 @@ function HowToUse() {
               <li>To-Do List: Stay organized by adding tasks that need attention. Tick them off as you go!</li>
               <li>Ongoing Interviews: See a list of applications that have interviews in progress.</li>
             </ul>
+
+            <hr />
 
             <Card.Title className='d-flex align-items-baseline gap-3'>
               <FontAwesomeIcon icon={faList} />
@@ -39,6 +43,8 @@ function HowToUse() {
               <li>Update the status as your application progresses through the pipeline.</li>
             </ul>
 
+            <hr />
+
             <Card.Title className='d-flex align-items-baseline gap-3'>
               <FontAwesomeIcon icon={faCirclePlus} />
               <h3>Create Job Application: Add New Opportunities</h3>
@@ -50,6 +56,8 @@ function HowToUse() {
               <li>Hit "Save" to add the application to your list.</li>
             </ul>
 
+            <hr />
+
             <Card.Title className='d-flex align-items-baseline gap-3'>
               <FontAwesomeIcon icon={faHandshake} />
               <h3>Job Boards: Explore Available Opportunities</h3>
@@ -60,6 +68,8 @@ function HowToUse() {
               <li>Click on a board to view its current listings.</li>
               <li>Apply for positions directly through the linked listings.</li>
             </ul>
+
+            <hr />
 
             <p>
               Now that you have a better understanding of the app's features, you're ready to take control of your job search journey!

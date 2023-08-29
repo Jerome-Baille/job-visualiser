@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../../services/authService';
+import { useAuthService } from '../../services/authService';
 import { useToast } from '../../contexts/ToastContext';
 
 export default function RegisterForm({ toggleLoginRegister, handleUserChange, handleLoadedChange }) {
     const navigate = useNavigate();
     const { showToast } = useToast();
+    const { register } = useAuthService();
 
     const [userInfo, setUserInfo] = useState({});
 

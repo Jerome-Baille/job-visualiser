@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getProfile, deleteUser, logout, updateUser } from "../../services/authService";
+import { useAuthService } from '../../services/authService';
 import { AuthContext } from '../Layout';
 import { useToast } from '../../contexts/ToastContext';
 
@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 
 export default function Profile() {
+    const { getProfile, deleteUser, logout, updateUser } = useAuthService();
     const { user } = useContext(AuthContext);
     const [show, setShow] = useState(false);
     const { showToast } = useToast();

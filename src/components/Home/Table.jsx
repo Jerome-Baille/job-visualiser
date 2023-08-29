@@ -9,19 +9,19 @@ import TableFilter from "./TableFilter";
 import useWindowSize from "../useWindowSize";
 
 /* Services */
-import { getAllOpportunities } from "../../services/opportunityService";
-import LoadingSpinner from "../LoadingSpinner";
+import { useOpportunityService } from "../../services/opportunityService";
 import PaginationSystem from "./PaginationSystem";
-import { logout } from "../../services/authService";
+import { useAuthService } from '../../services/authService';
 
 
 const Table = () => {
+  const { getAllOpportunities } = useOpportunityService();
+  const { logout } = useAuthService();
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(10);
+  const [recordsPerPage] = useState(20);
   const windowSize = useWindowSize();
   const navigate = useNavigate()
-  const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { isAuth, setIsAuth, setUser } = useContext(AuthContext);
 
   const [jobs, setJobs] = useState([])
   const [jobFiltered, setJobFiltered] = useState([])
@@ -35,48 +35,45 @@ const Table = () => {
     return pageCount;
   }, [jobFiltered, jobs, recordsPerPage])
 
-    useEffect(() => {
-        if (localStorage.getItem("jobs")) {
-          const jobsInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
-          setJobs(jobsInLocalStorage);
-          setJobFiltered(jobsInLocalStorage)
-          setIsLoaded(true);
-        } else {
-          if(isAuth){
-            getAllOpportunities(user.accessToken)
-              .then(data => {
+  useEffect(() => {
+    if (localStorage.getItem("jobs")) {
+      const jobsInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
+      setJobs(jobsInLocalStorage);
+      setJobFiltered(jobsInLocalStorage)
+    } else {
+      if (isAuth) {
+        getAllOpportunities()
+          .then(data => {
 
-                if(data.status === 200){
-                setJobs(data.body)
-                setJobFiltered(data.body)
-                setIsLoaded(true);
+            if (data.status === 200) {
+              setJobs(data.body)
+              setJobFiltered(data.body)
 
-                // add response to the localStorage
-                localStorage.setItem("jobs", JSON.stringify(data.body));
-                }
+              // add response to the localStorage
+              localStorage.setItem("jobs", JSON.stringify(data.body));
+            }
 
-                if(data.status === 401){
-                  logout().then(() => {
-                    setIsLoaded(true);            
-                    setIsAuth(false);
-                    setUser({})
-            
-                    setTimeout(() => {
-                        navigate('/auth');
-                    }, 2500)
-                })
-                }
-              }).catch(err => {
-                  console.log(err)
+            if (data.status === 401) {
+              logout().then(() => {
+                setIsAuth(false);
+                setUser({})
+
+                setTimeout(() => {
+                  navigate('/auth');
+                }, 2500)
               })
-          }
-        }
-    }, [isAuth, navigate, user.accessToken, setUser, setIsAuth])
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  }, [isAuth, navigate, setUser, setIsAuth])
 
-    let columns = [];
+  let columns = [];
 
-    if(windowSize.width > 768) {
-      columns = [
+  if (windowSize.width > 768) {
+    columns = [
       { label: "Job position", accessor: "name", sortable: true },
       { label: "Company", accessor: "company", sortable: true },
       // { label: "Location", accessor: "location", sortable: true },
@@ -84,64 +81,57 @@ const Table = () => {
       // { label: "Job offer link or company website", accessor: "link", sortable: false },
       { label: "Date", accessor: "applicationDate", sortable: true },
       { label: "Decision", accessor: "decision", sortable: false },
-      ];
-    } else {
-      columns = [
+    ];
+  } else {
+    columns = [
       { label: "Title", accessor: "name", sortable: true },
       { label: "Company", accessor: "company", sortable: true },
-      { label: "Type", accessor: "type", sortable: false },
-      { label: "Link", accessor: "link", sortable: false },
-      ];
-    }
-
-    const handleSorting = (sortField, sortOrder) => {
-        if (sortField) {
-            const sorted = [...jobFiltered].sort((a, b) => {
-                if (a[sortField] === null) return 1;
-                if (b[sortField] === null) return -1;
-                if (a[sortField] === null && b[sortField] === null) return 0;
-
-                return (
-                a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
-                numeric: true,
-                }) * (sortOrder === "asc" ? 1 : -1)
-                );
-            });
-
-            jobFiltered === jobs ? setJobs(sorted) : setJobFiltered(sorted);
-        }
-    };
-
-
-  if(isLoaded){
-    return (
-      <>
-        <JobContext.Provider value={{ jobs, setJobs, jobFiltered, setJobFiltered }}>
-            <TableFilter />
-        </JobContext.Provider>
-        
-        <table className="table table-main">
-          { jobFiltered.length === 0 ? <tbody><tr><td className="no-data" colSpan={7}>There is no data available</td></tr></tbody> : null }
-          <caption>
-          {/* Job offers I applied, column headers are sortable. */}
-            {jobFiltered.length} results out of {jobs.length} job applications
-          </caption>
-          <TableHead columns={columns} handleSorting={handleSorting} />
-          <TableBody columns={columns} jobs={jobFiltered === jobs ? slicedJobs : slicedJobFiltered} />
-        </table>
-
-        <PaginationSystem
-            nPages={nPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-        />
-      </>
-    );
-  } else {
-    return(
-      <LoadingSpinner />
-    )
+      // { label: "Type", accessor: "type", sortable: false },
+      // { label: "Link", accessor: "link", sortable: false },
+    ];
   }
+
+  const handleSorting = (sortField, sortOrder) => {
+    if (sortField) {
+      const sorted = [...jobFiltered].sort((a, b) => {
+        if (a[sortField] === null) return 1;
+        if (b[sortField] === null) return -1;
+        if (a[sortField] === null && b[sortField] === null) return 0;
+
+        return (
+          a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
+            numeric: true,
+          }) * (sortOrder === "asc" ? 1 : -1)
+        );
+      });
+
+      jobFiltered === jobs ? setJobs(sorted) : setJobFiltered(sorted);
+    }
+  };
+
+  return (
+    <>
+      <JobContext.Provider value={{ jobs, setJobs, jobFiltered, setJobFiltered }}>
+        <TableFilter />
+      </JobContext.Provider>
+
+      <table className="table table-main">
+        {jobFiltered.length === 0 ? <tbody><tr><td className="no-data" colSpan={7}>There is no data available</td></tr></tbody> : null}
+        <caption>
+          {/* Job offers I applied, column headers are sortable. */}
+          {jobFiltered.length} results out of {jobs.length} job applications
+        </caption>
+        <TableHead columns={columns} handleSorting={handleSorting} />
+        <TableBody columns={columns} jobs={jobFiltered === jobs ? slicedJobs : slicedJobFiltered} />
+      </table>
+
+      <PaginationSystem
+        nPages={nPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
+    </>
+  );
 };
 
 export default Table;

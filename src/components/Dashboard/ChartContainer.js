@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LineChart, BarChart } from './ChartPresentation';
 import { Card, Form } from 'react-bootstrap';
-import LoadingSpinner from '../LoadingSpinner';
 
 const ChartContainer = ({ jobs, isLoaded }) => {
     const [selectedWeek, setSelectedWeek] = useState(0); // Default: current week
@@ -111,60 +110,56 @@ const ChartContainer = ({ jobs, isLoaded }) => {
 
     return (
         <div>
-            {isLoaded ? (
-                <div className="row">
-                    <div className="col-sm-12 col-lg-8 mb-4">
-                        <Card className="chart-card">
-                            <Card.Header className='flex justify-content-center align-items-center'>
-                                <Card.Title>Applications per Month</Card.Title>
-                            </Card.Header>
-                            <Card.Body ref={lineChartCardBodyRef} id='line-chart-container' className="d-flex flex-grow-1 justify-content-center align-items-center">
-                                {lineChartDimension.width && lineChartDimension.height && (
-                                    <LineChart
-                                        data={monthlyApplicationData}
-                                        monthOrder={monthOrder}
-                                        width={lineChartDimension.width}
-                                        height={lineChartDimension.height}
-                                    />
-                                )}
-                            </Card.Body>
-                        </Card>
-                    </div>
-                    <div className="col-sm-12 col-lg-4">
-                        <Card className="chart-card">
-                            <Card.Header className='flex justify-content-center align-items-center'>
-                                <Card.Title>Applications per Day.</Card.Title>
-                            </Card.Header>
-                            <Card.Body ref={barChartCardBodyRef} id="bar-chart-container" className="d-flex flex-grow-1 justify-content-center align-items-center ">
-                                {barChartDimension.width && barChartDimension.height && (
-                                    <BarChart
-                                        data={applicationsPerDay}
-                                        width={barChartDimension.width}
-                                        height={barChartDimension.height}
-                                    />
-                                )}
-                            </Card.Body>
-                            <Card.Footer className="d-flex flex-column justify-content-end">
-                                <Form.Select
-                                    aria-label="Select the week you want to display."
-                                    id="weekSelect"
-                                    value={selectedWeek}
-                                    onChange={handleWeekChange}
-                                    className="w-50 align-self-end"
-                                >
-                                    <option value={0}>{weekLabels[0]}</option>
-                                    <option value={1}>{weekLabels[1]}</option>
-                                    <option value={2}>{weekLabels[2]}</option>
-                                    {/* Add more options if needed */}
-                                </Form.Select>
-                            </Card.Footer>
-
-                        </Card>
-                    </div>
+            <div className="row">
+                <div className="col-sm-12 col-lg-8 mb-4">
+                    <Card className="chart-card">
+                        <Card.Header className='flex justify-content-center align-items-center'>
+                            <Card.Title>Applications per Month</Card.Title>
+                        </Card.Header>
+                        <Card.Body ref={lineChartCardBodyRef} id='line-chart-container' className="d-flex flex-grow-1 justify-content-center align-items-center">
+                            {lineChartDimension.width && lineChartDimension.height && (
+                                <LineChart
+                                    data={monthlyApplicationData}
+                                    monthOrder={monthOrder}
+                                    width={lineChartDimension.width}
+                                    height={lineChartDimension.height}
+                                />
+                            )}
+                        </Card.Body>
+                    </Card>
                 </div>
-            ) : (
-                <LoadingSpinner />
-            )}
+                <div className="col-sm-12 col-lg-4">
+                    <Card className="chart-card">
+                        <Card.Header className='flex justify-content-center align-items-center'>
+                            <Card.Title>Applications per Day.</Card.Title>
+                        </Card.Header>
+                        <Card.Body ref={barChartCardBodyRef} id="bar-chart-container" className="d-flex flex-grow-1 justify-content-center align-items-center ">
+                            {barChartDimension.width && barChartDimension.height && (
+                                <BarChart
+                                    data={applicationsPerDay}
+                                    width={barChartDimension.width}
+                                    height={barChartDimension.height}
+                                />
+                            )}
+                        </Card.Body>
+                        <Card.Footer className="d-flex flex-column justify-content-end">
+                            <Form.Select
+                                aria-label="Select the week you want to display."
+                                id="weekSelect"
+                                value={selectedWeek}
+                                onChange={handleWeekChange}
+                                className="w-50 align-self-end"
+                            >
+                                <option value={0}>{weekLabels[0]}</option>
+                                <option value={1}>{weekLabels[1]}</option>
+                                <option value={2}>{weekLabels[2]}</option>
+                                {/* Add more options if needed */}
+                            </Form.Select>
+                        </Card.Footer>
+
+                    </Card>
+                </div>
+            </div>
         </div>
     );
 };

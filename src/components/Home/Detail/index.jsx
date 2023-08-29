@@ -11,22 +11,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 
 /* Services */
-import { deleteOpportunity, getOneOpportunity, putOpportunity } from "../../../services/opportunityService";
-import LoadingSpinner from "../../LoadingSpinner";
+import { useOpportunityService } from "../../../services/opportunityService";
 import NotLogged from "../../NotLogged";
-import { logout, getTokenAndUserId } from "../../../services/authService";
+import { getTokenAndUserId } from "../../../utils/authUtils";
+import { useAuthService } from '../../../services/authService';
 
 // Base API URL
 import { API_BASE_URL } from '../../../config/apiConfig';
 
 export default function Detail() {
+    const { getOneOpportunity, putOpportunity, deleteOpportunity } = useOpportunityService();
     const navigate = useNavigate()
+    const { logout } = useAuthService();
     const { id } = useParams()
-    const { isAuth, setIsAuth, user, setUser } = useContext(AuthContext);
+    const { isAuth, setIsAuth, setUser } = useContext(AuthContext);
     const decisionDateRef = useRef(null);
     const decisionRef = useRef(null);
-
-    const [isLoaded, setIsLoaded] = useState(false);
 
     const [job, setJob] = useState({
         name: '',
@@ -86,19 +86,16 @@ export default function Detail() {
     ];
 
     useEffect(() => {
-        if (!user.accessToken) return;
         if (!isAuth) {
             setJob([])
         }
-        getOneOpportunity(user.accessToken, id)
+        getOneOpportunity(id)
             .then(res => {
                 if (res.status === 200) {
                     setJob(res.body)
-                    setIsLoaded(true)
                 }
                 if (res.status === 401) {
                     logout().then(() => {
-                        setIsLoaded(true);
                         setIsAuth(false);
                         setUser({})
 
@@ -147,7 +144,7 @@ export default function Detail() {
             }).catch(err => {
                 console.log(err)
             })
-    }, [id, isAuth, setIsAuth, user.accessToken, navigate, setUser])
+    }, [id, isAuth, setIsAuth, navigate, setUser])
 
 
     const handleSetToday = () => {
@@ -170,7 +167,7 @@ export default function Detail() {
         event.preventDefault();
         var opportunity = { ...job, ...contactInfo }
 
-        putOpportunity(user.accessToken, opportunity)
+        putOpportunity(opportunity)
             .then(res => {
                 if (res.status === 200) {
                     // In local storage, in "jobs", replace the old job with the new one
@@ -196,7 +193,7 @@ export default function Detail() {
 
         setShow(false)
 
-        deleteOpportunity(user.accessToken, id)
+        deleteOpportunity(id)
             .then(res => {
                 if (res.status === 200) {
                     // In local storage, in "jobs", find the job with the id and delete it
@@ -221,180 +218,174 @@ export default function Detail() {
             })
     };
 
-    if (isLoaded) {
-        return (
-            <div className="background-container">
-                <main className="main-container">
-                    <Card>
-                        <Card.Body>
-                            {isAuth ?
-                                <div className="form-container">
-                                    <Stack
-                                        className="col-10 col-lg-5 mx-auto"
-                                        gap={3}
-                                        onSubmit={handleSubmit}
-                                        as={Form}
-                                    >
-                                        <Form.Group className="mb-3" controlId="formName">
-                                            <Form.Label>Poste : </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="name"
-                                                placeholder="Title of the job"
-                                                defaultValue={job.name}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formCompany">
-                                            <Form.Label>Entreprise : </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="company"
-                                                placeholder="Company name"
-                                                defaultValue={job.company}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formLocation">
-                                            <Form.Label>Lieu : </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="location"
-                                                placeholder="Location"
-                                                defaultValue={job.location}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formType">
-                                            <Form.Label>Type de poste : </Form.Label>
-                                            <Form.Select
-                                                aria-label="Type of job"
-                                                name="type"
-                                                placeholder="Type of job"
-                                                defaultValue={job.type}
-                                                onChange={handleChange}
-                                            >
-                                                <option>{job.type}</option>
+    return (
+        <div className="background-container">
+            <main className="main-container">
+                <Card>
+                    <Card.Body>
+                        {isAuth ?
+                            <div className="form-container">
+                                <Stack
+                                    className="col-10 col-lg-5 mx-auto"
+                                    gap={3}
+                                    onSubmit={handleSubmit}
+                                    as={Form}
+                                >
+                                    <Form.Group className="mb-3" controlId="formName">
+                                        <Form.Label>Poste : </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="name"
+                                            placeholder="Title of the job"
+                                            defaultValue={job.name}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formCompany">
+                                        <Form.Label>Entreprise : </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="company"
+                                            placeholder="Company name"
+                                            defaultValue={job.company}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formLocation">
+                                        <Form.Label>Lieu : </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="location"
+                                            placeholder="Location"
+                                            defaultValue={job.location}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formType">
+                                        <Form.Label>Type de poste : </Form.Label>
+                                        <Form.Select
+                                            aria-label="Type of job"
+                                            name="type"
+                                            placeholder="Type of job"
+                                            defaultValue={job.type}
+                                            onChange={handleChange}
+                                        >
+                                            <option>{job.type}</option>
 
-                                                {type.map((type) => {
-                                                    return (job.type === type.value ? null : <option key={type.value} value={type.value}>{type.label}</option>)
-                                                })}
-                                            </Form.Select>
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formLink">
-                                            <Form.Label>Lien de l'annonce ou site de l'entreprise : </Form.Label>
-                                            <InputGroup className="mb-3">
-                                                <Button
-                                                    className="btn-password"
-                                                    id="btn-link"
-                                                    onClick={() => window.open(job.link, '_blank')}
-                                                >
-                                                    <FontAwesomeIcon icon={faLink} />
-                                                </Button>
-                                                <Form.Control
-                                                    type="text"
-                                                    name="link"
-                                                    placeholder="Link to the job offer or company website"
-                                                    defaultValue={job.link}
-                                                    onChange={handleChange}
-                                                />
-                                            </InputGroup>
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formDate">
-                                            <Form.Label>Date de candidature : </Form.Label>
-                                            <Form.Control
-                                                type="date"
-                                                name="applicationDate"
-                                                placeholder={new Date(job.applicationDate).toLocaleDateString()}
-                                                value={(contactInfo && contactInfo.applicationDate) ? new Date(contactInfo.applicationDate).toISOString().substring(0, 10) : new Date(job.applicationDate).toISOString().substring(0, 10)}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formInterviewDate">
-                                            <Form.Label>Date des entretiens : </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="interviewDate"
-                                                placeholder="Interview date(s)"
-                                                defaultValue={job.interviewDate}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formDecisionDate">
-                                            <Form.Label>Acceptation / Refus : </Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="decisionDate"
-                                                placeholder="Decision date"
-                                                defaultValue={job.decisionDate}
-                                                onChange={handleChange}
-                                                ref={decisionDateRef}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" controlId="formDecision">
-                                            <Form.Label>Résultat final de la candidature : </Form.Label>
-                                            <Form.Select
-                                                aria-label="Final decision on the candidacy"
-                                                name="decision"
-                                                placeholder="Final decision on the candidacy"
-                                                defaultValue={job.decision}
-                                                onChange={handleChange}
-                                                ref={decisionRef}
-                                            >
-                                                <option>{job.decision === "unknown" ? "——" : job.decision}</option>
-
-                                                {status.map((status) => {
-                                                    return (job.decision === status.value ? null : <option key={status.value} value={status.value}>{status.label}</option>)
-                                                })}
-                                            </Form.Select>
-                                        </Form.Group>
-                                        <section className="btn-container">
+                                            {type.map((type) => {
+                                                return (job.type === type.value ? null : <option key={type.value} value={type.value}>{type.label}</option>)
+                                            })}
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formLink">
+                                        <Form.Label>Lien de l'annonce ou site de l'entreprise : </Form.Label>
+                                        <InputGroup className="mb-3">
                                             <Button
-                                                variant="danger"
-                                                onClick={handleShow}
-                                                className='btn-right btn-delete'
+                                                className="btn-password"
+                                                id="btn-link"
+                                                onClick={() => window.open(job.link, '_blank')}
                                             >
-                                                Delete
+                                                <FontAwesomeIcon icon={faLink} />
                                             </Button>
+                                            <Form.Control
+                                                type="text"
+                                                name="link"
+                                                placeholder="Link to the job offer or company website"
+                                                defaultValue={job.link}
+                                                onChange={handleChange}
+                                            />
+                                        </InputGroup>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formDate">
+                                        <Form.Label>Date de candidature : </Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            name="applicationDate"
+                                            placeholder={new Date(job.applicationDate).toLocaleDateString()}
+                                            value={(contactInfo && contactInfo.applicationDate) ? new Date(contactInfo.applicationDate).toISOString().substring(0, 10) : job.applicationDate.substring(0, 10)}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formInterviewDate">
+                                        <Form.Label>Date des entretiens : </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="interviewDate"
+                                            placeholder="Interview date(s)"
+                                            defaultValue={job.interviewDate}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formDecisionDate">
+                                        <Form.Label>Acceptation / Refus : </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="decisionDate"
+                                            placeholder="Decision date"
+                                            defaultValue={job.decisionDate}
+                                            onChange={handleChange}
+                                            ref={decisionDateRef}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formDecision">
+                                        <Form.Label>Résultat final de la candidature : </Form.Label>
+                                        <Form.Select
+                                            aria-label="Final decision on the candidacy"
+                                            name="decision"
+                                            placeholder="Final decision on the candidacy"
+                                            defaultValue={job.decision}
+                                            onChange={handleChange}
+                                            ref={decisionRef}
+                                        >
+                                            <option>{job.decision === "unknown" ? "——" : job.decision}</option>
 
-                                            <Button variant="secondary" onClick={handleSetToday}>
-                                                Today
+                                            {status.map((status) => {
+                                                return (job.decision === status.value ? null : <option key={status.value} value={status.value}>{status.label}</option>)
+                                            })}
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <section className="btn-container">
+                                        <Button
+                                            variant="danger"
+                                            onClick={handleShow}
+                                            className='btn-right btn-delete'
+                                        >
+                                            Delete
+                                        </Button>
+
+                                        <Button variant="secondary" onClick={handleSetToday}>
+                                            Today
+                                        </Button>
+
+                                        <Button
+                                            variant="primary"
+                                            type="submit"
+                                            className="btn-update"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </section>
+
+                                    <Modal show={show} onHide={handleClose}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Annihilation !</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>Are you sure you want to delete this job application ?</Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleClose}>
+                                                Close
                                             </Button>
-
-                                            <Button
-                                                variant="primary"
-                                                type="submit"
-                                                className="btn-update"
-                                            >
-                                                Submit
+                                            <Button variant="danger" onClick={handleDelete}>
+                                                Confirm
                                             </Button>
-                                        </section>
-
-                                        <Modal show={show} onHide={handleClose}>
-                                            <Modal.Header closeButton>
-                                                <Modal.Title>Annihilation !</Modal.Title>
-                                            </Modal.Header>
-                                            <Modal.Body>Are you sure you want to delete this job application ?</Modal.Body>
-                                            <Modal.Footer>
-                                                <Button variant="secondary" onClick={handleClose}>
-                                                    Close
-                                                </Button>
-                                                <Button variant="danger" onClick={handleDelete}>
-                                                    Confirm
-                                                </Button>
-                                            </Modal.Footer>
-                                        </Modal>
-                                    </Stack>
-                                </div>
-                                : <NotLogged />}
-                        </Card.Body>
-                    </Card>
-                </main>
-            </div>
-        );
-    } else {
-        return (
-            <LoadingSpinner />
-        )
-    }
+                                        </Modal.Footer>
+                                    </Modal>
+                                </Stack>
+                            </div>
+                            : <NotLogged />}
+                    </Card.Body>
+                </Card>
+            </main>
+        </div>
+    );
 }

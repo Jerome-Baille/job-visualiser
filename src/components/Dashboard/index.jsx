@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../Layout';
-import { getAllOpportunities } from '../../services/opportunityService';
+import { useOpportunityService } from '../../services/opportunityService';
 import NotLogged from '../NotLogged';
-import LoadingSpinner from '../LoadingSpinner';
 import InProgressJobs from './InProgressJobs';
 import Notes from '../Notes';
 import { Card, Stack } from 'react-bootstrap';
@@ -11,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faCircleQuestion, faCircleXmark, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
 
 const Dashboard = () => {
-    const { isAuth, user } = useContext(AuthContext);
+    const { getAllOpportunities } = useOpportunityService();
+    const { isAuth } = useContext(AuthContext);
     const [jobs, setJobs] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
                 if (localStorage.getItem('jobs')) {
                     setJobs(JSON.parse(localStorage.getItem('jobs')));
                 } else if (isAuth) {
-                    getAllOpportunities(user.accessToken)
+                    getAllOpportunities()
                         .then(data => {
                             if (data.status === 200) {
                                 setJobs(data.body);
@@ -39,11 +39,7 @@ const Dashboard = () => {
         };
 
         fetchJobs();
-    }, [isAuth, user.accessToken]);
-
-    if (!isLoaded) {
-        return <LoadingSpinner />;
-    }
+    }, [isAuth]);
 
     const positiveJobs = jobs.filter(job => job.decision === 'positive').length;
     const inProgressJobs = jobs.filter(job => job.decision === 'in progress').length;

@@ -174,7 +174,7 @@ th .down {
 
 .navbar,
 .navbar-brand,
-.navbar-nav, 
+.navbar-nav,
 .navbar-collapse,
 .navbar-header,
 .navbar-toggler,
@@ -294,18 +294,15 @@ th .down {
   }
 }
 
-.spinner-container {
+.spinner-content {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  .spinner-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    row-gap: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
 }
 
 .accordion-body>div {

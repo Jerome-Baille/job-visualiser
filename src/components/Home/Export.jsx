@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../Layout';
-import { exportOpportunities } from '../../services/opportunityService';
+import { useOpportunityService } from '../../services/opportunityService';
 import { Button } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
-import { getTokenAndUserId } from '../../services/authService';
+import { getTokenAndUserId } from '../../utils/authUtils';
 
 function ExportData() {
+    const { exportOpportunities } = useOpportunityService();
     const { user } = useContext(AuthContext);
     const [selectedFormat, setSelectedFormat] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
@@ -14,13 +15,13 @@ function ExportData() {
     // Download the data as an excel file or a PDF file
     const handleExportClick = () => {
         if (!user.userId || !user.accessToken) {
-            let {accessToken, userId } = getTokenAndUserId();
-            exportOpportunities(selectedYear, selectedFormat, userId, accessToken)
+            let {userId } = getTokenAndUserId();
+            exportOpportunities(selectedYear, selectedFormat, userId)
             .catch((err) => {
                 console.log(err);
             });
         };
-        exportOpportunities(selectedYear, selectedFormat, user.userId, user.accessToken)
+        exportOpportunities(selectedYear, selectedFormat, user.userId)
             .catch((err) => {
                 console.log(err);
             });

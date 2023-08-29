@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
 /* Services */
-import { logout } from '../../services/authService';
+import { useAuthService } from '../../services/authService';
 
 /* Contexts */
 import { useToast } from '../../contexts/ToastContext';
@@ -11,6 +11,7 @@ import { useToast } from '../../contexts/ToastContext';
 export default function LogoutForm({ handleUserChange, handleLoadedChange }) {
     const navigate = useNavigate()
     const { showToast } = useToast();
+    const { logout } = useAuthService();
 
     const handleLogout = (event) => {
         event.preventDefault();

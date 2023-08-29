@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../services/authService';
+import { useAuthService } from '../../services/authService';
 import { useToast } from '../../contexts/ToastContext';
+import { setTokensAndUserId } from '../../utils/authUtils';
 
 export default function LoginForm({ handleUserChange, handleLoadedChange, toggleLoginRegister }) {
     const navigate = useNavigate()
     const { showToast } = useToast();
+    const { login } = useAuthService();
 
     const [userInfo, setUserInfo] = useState({})
 
@@ -24,13 +26,9 @@ export default function LoginForm({ handleUserChange, handleLoadedChange, toggle
             .then(res => {
                 handleLoadedChange(true);
                 if (res.status === 200) {
-                    // Get the expiration time from the token
-                    const accessTokenExpiresIn = new Date(new Date().getTime() + res.body.accessTokenExpiresIn * 1000);
-                    const refreshTokenExpiresIn = new Date(new Date().getTime() + res.body.refreshTokenExpiresIn * 1000);
+                    const { accessToken, refreshToken, userId, accessTokenExpiresIn, refreshTokenExpiresIn } = res.body;
 
-                    document.cookie = `accessToken=${res.body.accessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
-                    document.cookie = `refreshToken=${res.body.refreshToken}; expires=${refreshTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
-                    document.cookie = `userId=${res.body.userId}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+                    setTokensAndUserId(accessToken, refreshToken, userId, accessTokenExpiresIn, refreshTokenExpiresIn);
 
                     localStorage.removeItem("jobs");
 

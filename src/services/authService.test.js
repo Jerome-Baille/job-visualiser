@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
-import { register, login, getTokenAndUserId, logout, deleteUser } from "./authService";
+import { register, login, logout, deleteUser } from "./authService";
+import { getTokenAndUserId } from "../utils/authUtils";
 
 describe('authService', () => {
   const mockUser = {

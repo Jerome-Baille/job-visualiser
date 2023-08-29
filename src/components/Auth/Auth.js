@@ -7,9 +7,6 @@ import LogoutForm from './LogoutForm';
 /* Bootstrap elements */
 import { Card } from 'react-bootstrap';
 
-/* Services */
-import LoadingSpinner from '../LoadingSpinner';
-
 export default function Auth() {
   const [isLoaded, setIsLoaded] = useState(true);
   const { isAuth, setIsAuth, setUser } = useContext(AuthContext);
@@ -29,40 +26,34 @@ export default function Auth() {
     setRegistered((prevRegister) => !prevRegister);
   };
 
-  if (isLoaded) {
-    return (
-      <div className="background-container">
-        <main className="main-container">
-          <Card>
-            <Card.Body>
-              <div className="d-flex flex-column align-items-center justify-content-center">
-                {isAuth ?
-                  <LogoutForm
+  return (
+    <div className="background-container">
+      <main className="main-container">
+        <Card>
+          <Card.Body>
+            <div className="d-flex flex-column align-items-center justify-content-center">
+              {isAuth ?
+                <LogoutForm
+                  handleUserChange={handleUserChange}
+                  handleLoadedChange={handleLoadedChange}
+                />
+                : (registered ?
+                  <LoginForm
                     handleUserChange={handleUserChange}
                     handleLoadedChange={handleLoadedChange}
+                    toggleLoginRegister={toggleLoginRegister}
                   />
-                  : (registered ?
-                    <LoginForm
-                      handleUserChange={handleUserChange}
-                      handleLoadedChange={handleLoadedChange}
-                      toggleLoginRegister={toggleLoginRegister}
-                    />
-                    :
-                    <RegisterForm
-                      handleUserChange={handleUserChange}
-                      handleLoadedChange={handleLoadedChange}
-                      toggleLoginRegister={toggleLoginRegister}
-                    />
-                  )}
-              </div>
-            </Card.Body>
-          </Card>
-        </main>
-      </div>
-    );
-  } else {
-    return (
-      <LoadingSpinner />
-    )
-  }
+                  :
+                  <RegisterForm
+                    handleUserChange={handleUserChange}
+                    handleLoadedChange={handleLoadedChange}
+                    toggleLoginRegister={toggleLoginRegister}
+                  />
+                )}
+            </div>
+          </Card.Body>
+        </Card>
+      </main>
+    </div>
+  );
 }

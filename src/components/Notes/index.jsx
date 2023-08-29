@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getProfile, updateUser } from "../../services/authService";
 import { Button, Card, Form } from 'react-bootstrap';
 import { AuthContext } from '../Layout';
 import { useToast } from '../../contexts/ToastContext';
+import { useAuthService } from '../../services/authService';
 
 function JobSearchNotes() {
+    const { getProfile, updateUser } = useAuthService();
     const { user } = useContext(AuthContext);
     const [notes, setNotes] = useState('');
     const { showToast } = useToast();
@@ -14,7 +15,7 @@ function JobSearchNotes() {
         getProfile(user.accessToken)
             .then(res => setNotes(res.body.notes))
             .catch(err => console.log(err));
-    }, [user.accessToken]);
+    }, []);
 
     const handleSaveNotes = (e) => {
         e.preventDefault();

@@ -1,6 +1,4 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../Layout';
 
 /* Bootstrap components */
 import Form from 'react-bootstrap/Form';
@@ -12,12 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 
 /* Services */
-import { putOpportunity } from "../../services/opportunityService";
+import { useOpportunityService } from "../../services/opportunityService";
 
 
 const TableBody = ({ jobs, columns }) => {
+    const { putOpportunity } = useOpportunityService();
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
 
     const status = [
         {
@@ -57,7 +55,7 @@ const TableBody = ({ jobs, columns }) => {
       const handleChange = (data, event) => {
         const opportunity = {...data, decision: event.target.value};
 
-        putOpportunity(user.accessToken, opportunity)
+        putOpportunity(opportunity)
             .then((res) => {
                 if(res.status === 200) {
                     // in localstorage, find the key jobs, inside this key find the index of the job with id = data._id, and update the decision to event.target.value

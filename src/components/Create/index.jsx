@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, Form, Stack } from "react-bootstrap";
-import { postOpportunity } from "../../services/opportunityService";
-import { getTokenAndUserId } from "../../services/authService";
+import { useOpportunityService } from "../../services/opportunityService";
+import { getTokenAndUserId } from "../../utils/authUtils";
 import { useToast } from '../../contexts/ToastContext';
 
 export default function Create() {
+  const { postOpportunity } = useOpportunityService();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [isValid, setIsValid] = useState(false);
@@ -37,9 +38,8 @@ export default function Create() {
     getTokenAndUserId().then((res) => {
       setContactInfo({ ...contactInfo, userId: res.userId });
       opportunity = { ...opportunity, userId: res.userId }
-      var accessToken = res.accessToken;
 
-      postOpportunity(accessToken, opportunity)
+      postOpportunity(opportunity)
         .then(res => {
           opportunity = { ...opportunity, _id: res.body.id }
 

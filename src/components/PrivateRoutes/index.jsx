@@ -3,12 +3,10 @@
  */
 import { Outlet, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import useAxiosInstance from '../../utils/axiosInstance';
 
 // Service to get the token
-import { getTokenAndUserId } from '../../services/authService';
-
-// LoadingSpinner component
-import LoadingSpinner from '../LoadingSpinner';
+import { getTokenAndUserId } from '../../utils/authUtils';
 
 // Base API URL
 import { API_BASE_URL } from '../../config/apiConfig';
@@ -19,59 +17,53 @@ import { API_BASE_URL } from '../../config/apiConfig';
  */
 const PrivateRoutes = () => {
   // State to track if user is authenticated
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
-  // State to track if component is loading
-  const [isLoading, setIsLoading] = useState(true);
+  /**
+   * Effect hook to check token validity and authentication status
+   */
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const { accessToken, refreshToken, accessTokenExpiresAt } = await getTokenAndUserId();
+        if (!accessToken || new Date(accessTokenExpiresAt) < new Date()) {
+          // Access token is expired, try to get a new one using the refresh token
+          const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${refreshToken}`
+            }
+          });
+          if (response.status === 200) {
+            const { accessToken: newAccessToken, accessTokenExpiresIn: newExpirationDate } = await response.json();
+            setIsAuthenticated(true);
 
-/**
- * Effect hook to check token validity and authentication status
- */
-useEffect(() => {
-  const checkAuthentication = async () => {
-    try {
-      const { accessToken, refreshToken, expirationDate } = await getTokenAndUserId();
-      if (!accessToken || new Date(expirationDate) < new Date()) {
-        // Access token is expired, try to get a new one using the refresh token
-        const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${refreshToken}`
+            const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
+
+            document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+          } else {
+            setIsAuthenticated(false);
           }
-        });
-        if (response.status === 200) {
-          const { accessToken: newAccessToken, accessTokenExpiresIn: newExpirationDate } = await response.json();
-          setIsAuthenticated(true);
-
-          const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
-
-          document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
         } else {
-          setIsAuthenticated(false);
+          const response = await fetch(`${API_BASE_URL}/auth/check`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          });
+          setIsAuthenticated(response.status === 200);
         }
-      } else {
-        const response = await fetch(`${API_BASE_URL}/auth/check`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        });
-        setIsAuthenticated(response.status === 200);
+      } catch (error) {
+        console.log(error);
+        setIsAuthenticated(false);
       }
-    } catch (error) {
-      console.log(error);
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  checkAuthentication();
-}, []);
+    };
+    checkAuthentication();
+  }, []);
 
   return (
-    isLoading
-      ? <LoadingSpinner />
-      : (isAuthenticated ? <Outlet /> : <Navigate to="/auth" />)
+    // <Outlet />
+    (isAuthenticated ? <Outlet /> : <Navigate to="/auth" />)
   );
 };
 

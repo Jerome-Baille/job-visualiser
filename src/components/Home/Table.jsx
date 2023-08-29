@@ -36,11 +36,11 @@ const Table = () => {
   }, [jobFiltered, jobs, recordsPerPage])
 
   useEffect(() => {
-    if (localStorage.getItem("jobs")) {
-      const jobsInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
-      setJobs(jobsInLocalStorage);
-      setJobFiltered(jobsInLocalStorage)
-    } else {
+    // if (localStorage.getItem("jobs")) {
+    //   const jobsInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
+    //   setJobs(jobsInLocalStorage);
+    //   setJobFiltered(jobsInLocalStorage)
+    // } else {
       if (isAuth) {
         getAllOpportunities()
           .then(data => {
@@ -49,8 +49,8 @@ const Table = () => {
               setJobs(data.body)
               setJobFiltered(data.body)
 
-              // add response to the localStorage
-              localStorage.setItem("jobs", JSON.stringify(data.body));
+              // // add response to the localStorage
+              // localStorage.setItem("jobs", JSON.stringify(data.body));
             }
 
             if (data.status === 401) {
@@ -67,7 +67,7 @@ const Table = () => {
             console.log(err)
           })
       }
-    }
+    // }
   }, [isAuth, navigate, setUser, setIsAuth])
 
   let columns = [];

@@ -35,34 +35,34 @@ export default function Create() {
 
     var opportunity = { ...contactInfo, applicationDate: isoDate, applicationYear: applicationYear }
 
-    getTokenAndUserId().then((res) => {
-      setContactInfo({ ...contactInfo, userId: res.userId });
-      opportunity = { ...opportunity, userId: res.userId }
+    let { userId } = getTokenAndUserId();
 
-      postOpportunity(opportunity)
-        .then(res => {
-          opportunity = { ...opportunity, _id: res.body.id }
+    setContactInfo({ ...contactInfo, userId });
+    opportunity = { ...opportunity, userId }
 
-          if (res.status === 201) {
-            var infoInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
-            if (infoInLocalStorage) {
-              infoInLocalStorage.unshift(opportunity);
-              localStorage.setItem("jobs", JSON.stringify(infoInLocalStorage));
-            }
+    postOpportunity(opportunity)
+      .then(res => {
+        opportunity = { ...opportunity, _id: res.body.id }
 
-            showToast('success', "The job application has been added to the database !");
-            setTimeout(() => {
-              navigate('/');
-            }, 2500)
-          } else {
-            showToast('error', "Oh no, something went wrong ! Try again");
+        if (res.status === 201) {
+          var infoInLocalStorage = JSON.parse(localStorage.getItem("jobs"));
+          if (infoInLocalStorage) {
+            infoInLocalStorage.unshift(opportunity);
+            localStorage.setItem("jobs", JSON.stringify(infoInLocalStorage));
           }
-        })
-        .catch(err => {
+
+          showToast('success', "The job application has been added to the database !");
+          setTimeout(() => {
+            navigate('/');
+          }, 2500)
+        } else {
           showToast('error', "Oh no, something went wrong ! Try again");
-          console.log(err);
-        })
-    })
+        }
+      })
+      .catch(err => {
+        showToast('error', "Oh no, something went wrong ! Try again");
+        console.log(err);
+      })
   };
 
   return (

@@ -113,17 +113,26 @@ export default function Detail() {
                                 const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
                                     method: 'POST',
                                     headers: {
-                                        'Authorization': `Bearer ${refreshToken}`
-                                    }
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        refreshToken: refreshToken
+                                    })
                                 });
                                 if (response.status === 200) {
                                     const { accessToken: newAccessToken, expirationDate: newExpirationDate } = await response.json();
-                                    setIsAuth(false);;
                                     const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
 
                                     document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+
+                                    setIsAuth(true);
+
+                                    // Wait 2 seconds and reload the page
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000)
                                 } else {
-                                    setIsAuth(false);;
+                                    setIsAuth(false);
                                 }
                             } else {
                                 const response = await fetch(`${API_BASE_URL}/auth/check`, {

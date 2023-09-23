@@ -31,16 +31,24 @@ const PrivateRoutes = () => {
           const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${refreshToken}`
-            }
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              refreshToken: refreshToken
+            })
           });
           if (response.status === 200) {
             const { accessToken: newAccessToken, accessTokenExpiresIn: newExpirationDate } = await response.json();
-            setIsAuthenticated(true);
-
             const accessTokenExpiresIn = new Date(new Date().getTime() + newExpirationDate * 1000);
 
             document.cookie = `accessToken=${newAccessToken}; expires=${accessTokenExpiresIn.toUTCString()}; path=/; sameSite=strict;`;
+
+            setIsAuthenticated(true);
+
+            // Wait 2 seconds and reload the page
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000)
           } else {
             setIsAuthenticated(false);
           }

@@ -1,9 +1,9 @@
 # Job Tracker
 
-[![React](https://img.shields.io/badge/React-17.0.2-blue)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-14.17.6-green)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.17.1-lightgrey)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-4.4.8-brightgreen)](https://www.mongodb.com/)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-16.0.0-green)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.18.1-lightgrey)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-5.0.0-brightgreen)](https://www.mongodb.com/)
 
 [Job Tracker Live Demo](https://job-tracker.jerome-baille.fr)
 

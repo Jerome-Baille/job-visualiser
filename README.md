@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# Job Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![React](https://img.shields.io/badge/React-17.0.2-blue)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-14.17.6-green)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.17.1-lightgrey)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4.4.8-brightgreen)](https://www.mongodb.com/)
 
-## Available Scripts
+[Job Tracker Live Demo](https://job-tracker.jerome-baille.fr)
 
-In the project directory, you can run:
+Job Tracker is an application designed to help job seekers keep track of their job applications, manage their job search process, and gain insights into their job search statistics.
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Integration](#api-integration)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
+- [Contact Information](#contact-information)
+- [Acknowledgments](#acknowledgments)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+- User Authentication:
+  - Register, log in, update account details, and delete account.
+  - Log out when needed.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Job Application Management:
+  - Manually add job application details (company name, job title, application date, etc.).
+  - Import job application data using a Google Chrome extension.
 
-### `npm run build`
+- Application Dashboard:
+  - View a table of job applications with color-coded statuses (in progress, positive response, negative response, etc.).
+  - Filter job applications by position, company name, job type (remote, on-site, hybrid), and status.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Statistics:
+  - Visualize day-to-day and monthly statistics of your job search.
+  - Gain insights into your job search progress.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Job Boards:
+  - Access a list of job boards to facilitate your job search.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technologies Used
 
-### `npm run eject`
+- Frontend:
+  - React
+  - Create React App
+  - D3 (for statistics)
+  - Axios
+  - React Bootstrap
+  - SCSS (Sass)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Backend:
+  - Node.js
+  - Express.js
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Database:
+  - MongoDB
+  - Mongoose (ORM)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Installation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+To run the Job Tracker app locally, follow these steps:
 
-## Learn More
+1. Clone this repository.
+2. Navigate to the frontend and backend directories and install dependencies using `npm install`.
+3. Set up your MongoDB database and update the configuration in the backend.
+4. Run the backend server using `npm start` in the backend directory.
+5. Run the frontend using `npm start` in the frontend directory.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Register or log in to your account.
+2. Update your account details or delete your account when needed.
+3. Add job applications manually or using the Chrome extension.
+4. View and manage your job applications in the dashboard.
+5. Gain insights into your job search statistics.
+6. Access job boards to find new opportunities.
 
-### Code Splitting
+## API Integration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Job Tracker integrates with various job boards and websites to provide job search functionality. More details about specific integrations can be found in the documentation.
 
-### Analyzing the Bundle Size
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Contributions to Job Tracker are welcome. Please submit issues or pull requests.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the MIT License.
 
-### Advanced Configuration
+## Authors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- [Jerome BAILLE](https://github.com/Jerome-Baille) - Frontend Development
+- [Jerome BAILLE](https://github.com/Jerome-Baille) - Backend Development
 
-### Deployment
+## Contact Information
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+For questions or support, please contact through [my website](https://jerome-baille.fr).
 
-### `npm run build` fails to minify
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Thanks to the React, Node.js, and MongoDB communities for their fantastic tools and libraries.
+- Special thanks to the contributors who helped make this project possible.

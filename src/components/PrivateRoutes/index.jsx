@@ -28,7 +28,7 @@ const PrivateRoutes = () => {
         const { accessToken, refreshToken, accessTokenExpiresAt } = await getTokenAndUserId();
         if (!accessToken || new Date(accessTokenExpiresAt) < new Date()) {
           // Access token is expired, try to get a new one using the refresh token
-          const response = await fetch(`${API_BASE_URL}/auth/refreshToken`, {
+          const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

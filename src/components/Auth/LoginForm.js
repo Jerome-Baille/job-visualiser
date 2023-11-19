@@ -26,9 +26,9 @@ export default function LoginForm({ handleUserChange, handleLoadedChange, toggle
             .then(res => {
                 handleLoadedChange(true);
                 if (res.status === 200) {
-                    const { accessToken, refreshToken, userId, accessTokenExpiresIn, refreshTokenExpiresIn } = res.body;
+                    const { accessToken, refreshToken, userId, accessTokenExpireDate, refreshTokenExpireDate } = res.body;
 
-                    setTokensAndUserId(accessToken, refreshToken, userId, accessTokenExpiresIn, refreshTokenExpiresIn);
+                    setTokensAndUserId(accessToken, refreshToken, userId, accessTokenExpireDate, refreshTokenExpireDate);
 
                     localStorage.removeItem("jobs");
 
